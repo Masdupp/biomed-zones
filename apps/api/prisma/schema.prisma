@@ -1,0 +1,23 @@
+// Single source of truth for the whole database schema (ADR-0005).
+// Spatial columns are created in migration SQL and declared as Unsupported here.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+  binaryTargets   = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [postgis]
+}
+
+/// Key/value metadata about the loaded dataset (snapshot version, last load, last training run).
+model AppMeta {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("app_meta")
+}

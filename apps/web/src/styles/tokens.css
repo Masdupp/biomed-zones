@@ -1,0 +1,109 @@
+/*
+ * BioMed Zones design tokens (ADR-0008).
+ * One brand colour (deep teal), one alert accent, neutrals. Data colours live only in
+ * map/chart scales (see src/lib/colorScale.ts), never in UI chrome.
+ * Spacing: 4px grid (Tailwind --spacing). Radius: 6px maximum. Borders, not shadows.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Neutrals */
+  --bg: #fafaf9;
+  --bg-subtle: #f4f4f2;
+  --surface: #ffffff;
+  --surface-hover: #f5f5f4;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+
+  /* Ink (WCAG contrast on --bg: ink 18.2:1, muted 7.9:1, subtle 4.75:1; brand 5.2:1) */
+  --ink: #0c1116;
+  --ink-muted: #44505c;
+  --ink-subtle: #67717c;
+
+  /* Brand */
+  --brand: #0f766e;
+  --brand-hover: #115e59;
+  --brand-ink: #ffffff;
+  --brand-subtle: #e6f2f1;
+
+  /* Alert accent + semantic */
+  --accent: #b45309;
+  --accent-subtle: #fdf3e7;
+  --danger: #b91c1c;
+  --success: #15803d;
+
+  --focus-ring: #0f766e;
+
+  /* Typography */
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Radius (max 6px) */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 250ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Layout */
+  --header-h: 48px;
+  --statusbar-h: 28px;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0c1116;
+  --bg-subtle: #10161c;
+  --surface: #131a21;
+  --surface-hover: #18212a;
+  --border: #222c36;
+  --border-strong: #2f3b47;
+  --ink: #e6eaee;
+  --ink-muted: #a7b1bb;
+  --ink-subtle: #87929d;
+  --brand: #2bb3a6;
+  --brand-hover: #3cc7b9;
+  --brand-ink: #06201d;
+  --brand-subtle: #0f2826;
+  --accent: #f0a14a;
+  --accent-subtle: #2a1d0f;
+  --danger: #f87171;
+  --success: #4ade80;
+  --focus-ring: #2bb3a6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #0c1116;
+    --bg-subtle: #10161c;
+    --surface: #131a21;
+    --surface-hover: #18212a;
+    --border: #222c36;
+    --border-strong: #2f3b47;
+    --ink: #e6eaee;
+    --ink-muted: #a7b1bb;
+    --ink-subtle: #87929d;
+    --brand: #2bb3a6;
+    --brand-hover: #3cc7b9;
+    --brand-ink: #06201d;
+    --brand-subtle: #0f2826;
+    --accent: #f0a14a;
+    --accent-subtle: #2a1d0f;
+    --danger: #f87171;
+    --success: #4ade80;
+    --focus-ring: #2bb3a6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-base: 0.01ms;
+    --duration-slow: 0.01ms;
+  }
+}

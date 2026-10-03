@@ -3,10 +3,14 @@
 name = "biomed-zones-workspace"
 version = "2.0.0"
 requires-python = ">=3.11,<3.12"
-dependencies = []
+dependencies = ["biomed-pipeline", "biomed-ml"]
 
 [tool.uv]
 package = false
+
+[tool.uv.sources]
+biomed-pipeline = { workspace = true }
+biomed-ml = { workspace = true }
 
 [tool.uv.workspace]
 members = ["data/pipeline", "services/ml"]
@@ -22,5 +26,10 @@ target-version = "py311"
 select = ["E", "F", "I", "B", "UP", "SIM", "N"]
 ignore = ["N803", "N806"]  # scientific variable names (X, X_train)
 
+[tool.ruff.lint.isort]
+known-first-party = ["biomed_pipeline", "biomed_ml"]
+
 [tool.pytest.ini_options]
 testpaths = ["data/pipeline/tests", "services/ml/tests"]
+# Starlette deprecates httpx in TestClient upstream; not actionable here.
+filterwarnings = ["ignore:Using `httpx` with `starlette.testclient`"]

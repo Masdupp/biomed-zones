@@ -23,6 +23,7 @@ Short ADRs. Status is `accepted` unless stated otherwise. New decisions are appe
 **Context.** h3-pg is convenient for SQL aggregation but must not be a hard dependency.
 **Decision.** The pipeline computes H3 indexes, parents and boundaries with the `h3` Python library (v4) and stores `h3` as `TEXT` + a PostGIS `geometry(Polygon,4326)`. If the h3 extension is present, it is enabled and used only for convenience queries (`h3_cell_to_parent`), never required.
 **Consequences.** Works on any PostGIS. Polygons are stored once, so the API never recomputes geometry.
+**Status note (P1).** h3-pg 4.2.3 installed cleanly with PostGIS 3.6.4 on arm64 and is enabled; `/health` reports both versions.
 
 ## ADR-0005 — Prisma owns the whole schema
 **Context.** Tables are written by Python (features, scores) and by Node (users, contributions). Two migration systems on one DB would drift.

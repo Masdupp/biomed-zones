@@ -1,0 +1,104 @@
+# BioMed Zones v2 — full stack. Start with `docker compose up` from the repo root (ADR-0002).
+# Order (ADR-0006): db → migrate → pipeline → ml + api → web.
+name: biomed-zones
+
+x-db-env: &db-env
+  DATABASE_URL: postgresql://${POSTGRES_USER:-biomed}:${POSTGRES_PASSWORD:-biomed}@db:5432/${POSTGRES_DB:-biomed}
+
+services:
+  db:
+    build: ./db
+    image: biomed-zones/db:dev
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-biomed}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-biomed}
+      POSTGRES_DB: ${POSTGRES_DB:-biomed}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    image: biomed-zones/api:dev
+    environment:
+      <<: *db-env
+    command: ['npx', 'prisma', 'migrate', 'deploy']
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: 'no'
+
+  pipeline:
+    build:
+      context: ..
+      dockerfile: data/pipeline/Dockerfile
+    image: biomed-zones/pipeline:dev
+    environment:
+      <<: *db-env
+      COPERNICUSMARINE_SERVICE_USERNAME: ${COPERNICUSMARINE_SERVICE_USERNAME:-}
+      COPERNICUSMARINE_SERVICE_PASSWORD: ${COPERNICUSMARINE_SERVICE_PASSWORD:-}
+    command: ['load-snapshot']
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: 'no'
+
+  ml:
+    build:
+      context: ..
+      dockerfile: services/ml/Dockerfile
+    image: biomed-zones/ml:dev
+    environment:
+      <<: *db-env
+      ML_ADMIN_TOKEN: ${ML_ADMIN_TOKEN:-dev-ml-admin-token-change-me}
+    ports:
+      - '${ML_PORT:-8001}:8001'
+    depends_on:
+      pipeline:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  api:
+    image: biomed-zones/api:dev
+    environment:
+      <<: *db-env
+      NODE_ENV: production
+      API_PORT: 3001
+      ML_SERVICE_URL: http://ml:8001
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5173}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-access-secret-change-me}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-me}
+      ML_ADMIN_TOKEN: ${ML_ADMIN_TOKEN:-dev-ml-admin-token-change-me}
+    ports:
+      - '${API_PORT:-3001}:3001'
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      pipeline:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+    image: biomed-zones/web:dev
+    ports:
+      - '${WEB_PORT:-8080}:8080'
+    depends_on:
+      api:
+        condition: service_healthy
+      ml:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
