@@ -1,0 +1,4 @@
+# Root entry point so `docker compose up` works from the repository root.
+# The real definition lives in infra/docker-compose.yml (see docs/DECISIONS.md, ADR-0002).
+include:
+  - infra/docker-compose.yml

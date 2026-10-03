@@ -1,0 +1,22 @@
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+*.tsbuildinfo
+.env
+.env.local
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+# raw downloads from live ingestion are large and reproducible; snapshot is committed
+data/raw/
+data/clean/
+data/cache/
+services/ml/artifacts/runs/
+playwright-report/
+test-results/
+.DS_Store
