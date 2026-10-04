@@ -1,6 +1,9 @@
 # syntax=docker/dockerfile:1.7
 # Build context: repository root. One-shot job: loads data/snapshot (default) or runs live ingestion.
 FROM python:3.11-slim-bookworm
+# rasterio's manylinux wheel links against expat.
+RUN apt-get update && apt-get install -y --no-install-recommends libexpat1 \
+ && rm -rf /var/lib/apt/lists/*
 COPY --from=ghcr.io/astral-sh/uv:0.11 /uv /usr/local/bin/uv
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PROJECT_ENVIRONMENT=/opt/venv PATH=/opt/venv/bin:$PATH \
     PYTHONUNBUFFERED=1

@@ -59,6 +59,9 @@ services:
     environment:
       <<: *db-env
       ML_ADMIN_TOKEN: ${ML_ADMIN_TOKEN:-dev-ml-admin-token-change-me}
+    volumes:
+      # Artifacts of runs trained inside the container (POST /train) survive restarts.
+      - ml_artifacts:/repo/services/ml/artifacts/runs
     ports:
       - '${ML_PORT:-8001}:8001'
     depends_on:
@@ -102,3 +105,4 @@ services:
 
 volumes:
   pgdata:
+  ml_artifacts:

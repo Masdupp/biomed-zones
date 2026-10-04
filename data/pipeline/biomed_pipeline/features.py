@@ -309,5 +309,37 @@ FEATURES: tuple[FeatureDef, ...] = (
     ),
 )
 
+# Model predictors sampled from global layers (ADR-0020); identical definitions are used for
+# training points worldwide and for French cells.
+_ML = (
+    ("ml_sst_mean", "SST mean (global layer)", "°C", "GLORYS12 1/12° climatology"),
+    ("ml_sst_min", "SST coldest month (global layer)", "°C", "GLORYS12 1/12° climatology"),
+    ("ml_sst_max", "SST warmest month (global layer)", "°C", "GLORYS12 1/12° climatology"),
+    ("ml_sbt_mean", "Bottom temperature (global layer)", "°C", "GLORYS12 1/12° climatology"),
+    ("ml_sss_mean", "Surface salinity (global layer)", "PSU", "GLORYS12 1/12° climatology"),
+    ("ml_o2_mean", "Dissolved oxygen (global layer)", "mmol/m³", "BGC 1/4° climatology"),
+    ("ml_ph_mean", "pH (global layer)", "pH", "BGC 1/4° climatology"),
+    ("ml_chl_log", "Chlorophyll-a, log10 (global layer)", "log10 mg/m³", "BGC 1/4° climatology"),
+    ("ml_depth_log", "Depth, log10(1 + m) (global layer)", "log10 m", "ETOPO 2022 at 1/12°"),
+    ("ml_tair_mean", "Air temperature mean (global layer)", "°C", "TerraClimate at 0.25°"),
+    ("ml_tair_min", "Coldest-month minimum (global layer)", "°C", "TerraClimate at 0.25°"),
+    ("ml_tair_max", "Warmest-month maximum (global layer)", "°C", "TerraClimate at 0.25°"),
+    (
+        "ml_precip_log",
+        "Annual precipitation, log10(1 + mm) (global layer)",
+        "log10 mm",
+        "TerraClimate at 0.25°",
+    ),
+    ("ml_rh_mean", "Relative humidity (global layer)", "%", "TerraClimate at 0.25°"),
+    ("ml_elev", "Elevation (global layer)", "m", "ETOPO 2022 at 1/12°"),
+    ("ml_soil_ph", "Soil pH 5-15 cm (global layer)", "pH", "SoilGrids at 0.1°"),
+    ("ml_soil_soc", "Soil organic carbon 5-15 cm (global layer)", "g/kg", "SoilGrids at 0.1°"),
+    ("ml_soil_clay", "Clay 5-15 cm (global layer)", "%", "SoilGrids at 0.1°"),
+)
+FEATURES = FEATURES + tuple(
+    FeatureDef(key, label, unit, "model", f"SDM predictor: {src}.", "ml_layers")
+    for key, label, unit, src in _ML
+)
+
 BY_KEY = {f.key: f for f in FEATURES}
 SOURCES = tuple(dict.fromkeys(f.source for f in FEATURES))

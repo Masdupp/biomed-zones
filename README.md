@@ -4,7 +4,7 @@
 
 BioMed Zones scores every H3 hexagon of Metropolitan France (land and 12 nm territorial sea) and the five overseas regions (Guadeloupe, Martinique, Guyane, Réunion, Mayotte) for 9 medical species. The score combines a transparent expert model with a species distribution model trained on GBIF/OBIS occurrences, and every value can be traced back to a public source.
 
-> Status: **Phase 2 (data) complete.** See [PLAN.md](PLAN.md) for phases and [docs/DECISIONS.md](docs/DECISIONS.md) for architecture decisions.
+> Status: **Phase 3 (model) complete.** See [PLAN.md](PLAN.md) for phases and [docs/DECISIONS.md](docs/DECISIONS.md) for architecture decisions.
 
 ## Quick start
 
@@ -65,6 +65,30 @@ make snapshot    # build features, load PostGIS, refresh data/snapshot and DATA_
 Occurrence data: GBIF.org (4 October 2026) GBIF Occurrence Download
 https://doi.org/10.15468/dl.sfc2ns, and OBIS (https://obis.org). Full source list with licences
 in [PLAN.md](PLAN.md#3-data-sources) and the in-app provenance registry.
+
+## Model
+
+Hybrid and decomposable: a rule-based **expert score** (tolerance bands per species, habitat
+weights, hard survival constraints) blended 50/50 with a **species distribution model**
+(LightGBM per species, logistic-regression baseline, spatial block cross-validation, isotonic
+calibration, TreeSHAP explanations), then multiplied by regulatory, human-pressure and
+data-confidence modifiers. Honesty rules force *indoor only* where open culture is unrealistic
+(freshwater species, non-native marine species, climate outside survival limits). Scores for all
+species × cells are precomputed. Details, metrics and limits: [docs/MODEL_CARD.md](docs/MODEL_CARD.md).
+
+| Endpoint (ML service, `/ml/…` via the gateway) | |
+|---|---|
+| `POST /score` | `{species, h3}` or `{species, profile, territory}` → score, confidence, limiting factors, SHAP drivers, recommendation |
+| `GET /explain?species=&h3=` | full decomposition: parameter fits, modifiers, all SHAP values |
+| `GET /metrics` | spatial-CV metrics of the active run |
+| `POST /train` | async retraining (header `x-admin-token`), poll `GET /train/{run_id}` |
+
+```bash
+uv run biomed-pipeline training-data   # presence/background table from occurrences + global layers
+uv run biomed-ml train                 # train, precompute 851k scores, activate the run
+uv run biomed-ml report                # regenerate MODEL_CARD.md and docs/model/*.png
+uv run biomed-ml export-snapshot && uv run biomed-pipeline export-snapshot
+```
 
 ## Development
 

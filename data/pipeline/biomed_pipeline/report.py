@@ -9,6 +9,7 @@ import pandas as pd
 from .db import connect
 from .features import FEATURES
 from .settings import REPO_ROOT
+from .sources import ml_layers
 from .territories import TERRITORIES
 
 TERR = [t.code for t in TERRITORIES]
@@ -64,6 +65,8 @@ def coverage(conn) -> pd.DataFrame:
     for f in FEATURES:
         if f.key in LAND_PRESSURE:
             cond = APPLICABLE["terrestrial"]
+        elif f.domain == "model":
+            cond = APPLICABLE["marine" if f.key in ml_layers.MARINE else "terrestrial"]
         else:
             cond = APPLICABLE.get(f.domain, "TRUE")
         q = f"""

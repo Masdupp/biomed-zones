@@ -1,0 +1,62 @@
+{
+  "seed": 20261004,
+  "accessible_km": 1000,
+  "bg_ratio": 3,
+  "bg_min": 1000,
+  "bg_max": 10000,
+  "block_deg": 5,
+  "n_folds": 5,
+  "min_presences": 30,
+  "thin_deg": {
+    "marine": 0.08333333333333333,
+    "terrestrial": 0.25,
+    "freshwater": 0.25
+  },
+  "species": {
+    "arenicola-marina": {
+      "presences": 3085,
+      "background": 9189,
+      "trainable": true
+    },
+    "conus-magus": {
+      "presences": 160,
+      "background": 1000,
+      "trainable": true
+    },
+    "limulus-polyphemus": {
+      "presences": 1573,
+      "background": 4710,
+      "trainable": true
+    },
+    "holothuria-tubulosa": {
+      "presences": 485,
+      "background": 1442,
+      "trainable": true
+    },
+    "danio-rerio": {
+      "presences": 104,
+      "background": 995,
+      "trainable": true
+    },
+    "ambystoma-mexicanum": {
+      "presences": 13,
+      "background": 998,
+      "trainable": false
+    },
+    "catharanthus-roseus": {
+      "presences": 5671,
+      "background": 9937,
+      "trainable": true
+    },
+    "salix-alba": {
+      "presences": 7308,
+      "background": 9891,
+      "trainable": true
+    },
+    "ginkgo-biloba": {
+      "presences": 1485,
+      "background": 4424,
+      "trainable": true
+    }
+  }
+}

@@ -36,4 +36,6 @@ def test_health_degraded_when_db_down(monkeypatch):
         "database": "error",
         "postgis": None,
         "h3": None,
+        "active_run": None,
+        "models_loaded": 0,
     }

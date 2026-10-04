@@ -86,3 +86,21 @@ Short ADRs. Status is `accepted` unless stated otherwise. New decisions are appe
 **Context.** Marine Regions' 12 nm layer is measured from legal baselines and excludes internal waters (enclosed bays, estuaries, lagoons). A spot check found the Baie du Mont-Saint-Michel — the reference site for the regression test — outside the grid. Internal waters are 16,094 km² in Metropole, 2,792 km² in Guyane, 2,450 km² in Guadeloupe, 412 km² in Martinique.
 **Decision.** The marine zone is the union of `eez_12nm` and `eez_internal_waters` (Marine Regions, CC BY 4.0). This added 4,117 resolution-7 cells (+28 % marine cells).
 **Consequences.** Bays and lagoons, often the most relevant sites for marine culture, are scored.
+**Addendum to ADR-0011 (P3).** LightGBM's macOS wheel needs `libomp`, absent without Homebrew. Locally, scikit-learn's bundled `libomp.dylib` is symlinked into the uv Python's `lib/` (one of LightGBM's rpath search locations). The Linux images install `libgomp1` instead.
+
+## ADR-0020 — SDM predictors from global layers, for training and prediction alike
+**Context.** SDMs are trained on worldwide occurrences; the national layers (EMODnet, Copernicus DEM, SoilGrids 500 m, CLC) do not exist globally. Training on coarse global values and predicting on fine national values would feed the model a different distribution than it learned.
+**Decision.** Model predictors (`ml_*` features) come from global grids — Copernicus Marine climatologies (1/12°, 1/4°), ETOPO 2022 at 1/12° (depth, elevation), TerraClimate at 0.25°, SoilGrids at 0.1° — and are sampled the same way (nearest valid pixel) at training points and at French cell centres. The expert score keeps using the higher-resolution national features.
+**Consequences.** One feature definition per model; coastal gradients are smoothed in the ML part and captured by the expert part. The `ml_*` values are stored with provenance like any other feature.
+
+## ADR-0021 — SHAP via LightGBM's TreeSHAP, no `shap` package
+**Decision.** Per-cell explanations use `Booster.predict(pred_contrib=True)`, LightGBM's implementation of exact TreeSHAP (Lundberg et al. 2020), in log-odds space.
+**Consequences.** Exact Shapley values without the `shap`/numba dependency (smaller image, faster cold start). Top 3 drivers are stored with every score; `GET /explain` returns all of them.
+
+## ADR-0022 — Honesty rules are part of the score, not of the UI
+**Decision.** `score_cell` labels a cell *indoor only* and caps its open-environment score at 30 when the species is freshwater, when a marine species is outside its native territories (introduction risk), or when a temperature survival limit fails. Strict reserves (≥ 50 % of the cell) are excluded. These rules apply even when the ML model predicts high suitability.
+**Consequences.** No interface can display a forced high score for *Danio rerio*, *Ambystoma mexicanum*, *Limulus polyphemus* or tropical species in Metropole.
+
+## ADR-0023 — Species profiles are built and verified, not typed
+**Decision.** Medical uses, tolerance bands and reference keys are hand-written in `data/reference/species.source.json`; `biomed-pipeline species` adds taxonomy and IUCN status from GBIF (gaps from WoRMS) and resolves every DOI with Crossref and every URL over HTTP. Unresolvable references are marked "to verify". During drafting, 9 of 27 DOIs recalled from memory resolved to unrelated papers and were replaced by Crossref-searched ones.
+**Consequences.** All 34 references in `species.json` are verified; tolerance bands remain literature-derived approximations flagged for expert validation.

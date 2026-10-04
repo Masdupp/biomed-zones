@@ -101,7 +101,9 @@ def load_into_db(
     snapshot_version: str | None = None,
 ) -> None:
     with connect() as conn, conn.cursor() as cur:
-        cur.execute("TRUNCATE cell_feature, occurrence, cell, territory")
+        # Scores reference cells and are invalid once the data change: they are reloaded from
+        # the snapshot or recomputed by the ML service afterwards.
+        cur.execute("TRUNCATE score, cell_feature, occurrence, cell, territory")
 
         for p in provenance:
             d = asdict(p)

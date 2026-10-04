@@ -158,6 +158,28 @@
     "notes": "Used only for Guyane cells outside the CLC DOM coverage (coastal strip). WorldCover grassland is mapped to 'natural', whereas CLC separates pastures (2xx)."
   },
   {
+    "id": "etopo-2022",
+    "source_key": "etopo",
+    "name": "NOAA ETOPO 2022 Global Relief Model (bed elevation)",
+    "url": "https://doi.org/10.25921/fd45-gt74",
+    "license": "Public domain (US Government)",
+    "spatial_resolution": "60 arc-second product read at 1/12° (OPeNDAP stride 5)",
+    "license_url": null,
+    "citation": "NOAA National Centers for Environmental Information (2022). ETOPO 2022 15 Arc-Second Global Relief Model. https://doi.org/10.25921/fd45-gt74",
+    "temporal_coverage": null,
+    "temporal_resolution": null,
+    "variables": [
+      "bed elevation → depth (sea), elevation (land)"
+    ],
+    "access_method": "OPeNDAP www.ngdc.noaa.gov/thredds",
+    "mode": "live",
+    "retrieved_at": "2026-10-04T11:34:31+00:00",
+    "raw_path": "data/clean/ml_layers/etopo2022_bed_1-12deg.nc",
+    "checksum": null,
+    "record_count": null,
+    "notes": "Global layer used only for SDM training and prediction."
+  },
+  {
     "id": "gbif",
     "source_key": "gbif",
     "name": "GBIF occurrence search API",
@@ -368,6 +390,55 @@
     "checksum": "44853c65af581787b656a921ab2f80459c7f8f0199b5701462b9ec20cda42796",
     "record_count": 90,
     "notes": null
+  },
+  {
+    "id": "soilgrids-global",
+    "source_key": "soilgrids",
+    "name": "ISRIC SoilGrids 2.0 — global 0.1° (5-15 cm)",
+    "url": "https://soilgrids.org",
+    "license": "CC BY 4.0",
+    "spatial_resolution": "250 m native, requested at 0.1° in EPSG:4326",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "citation": "Poggio, L. et al. (2021). SOIL 7, 217-240. https://doi.org/10.5194/soil-7-217-2021",
+    "temporal_coverage": null,
+    "temporal_resolution": null,
+    "variables": [
+      "phh2o 5-15 cm",
+      "soc 5-15 cm",
+      "clay 5-15 cm"
+    ],
+    "access_method": "OGC WCS 2.0.1 maps.isric.org (global extent)",
+    "mode": "live",
+    "retrieved_at": "2026-10-04T11:34:31+00:00",
+    "raw_path": "data/raw/ml_layers",
+    "checksum": "7cfdfaf40deb47170244ef4c1edcd77e711ef9addc899280358a906a95220f94",
+    "record_count": null,
+    "notes": "Global layer used only for SDM training and prediction."
+  },
+  {
+    "id": "terraclimate-global",
+    "source_key": "terraclimate",
+    "name": "TerraClimate monthly climate — global 0.25° subsample",
+    "url": "https://www.climatologylab.org/terraclimate.html",
+    "license": "CC0 1.0",
+    "spatial_resolution": "1/24° read with stride 6 (0.25°)",
+    "license_url": null,
+    "citation": "Abatzoglou, J.T. et al. (2018). Scientific Data 5, 170191. https://doi.org/10.1038/sdata.2017.191",
+    "temporal_coverage": "2021-01/2025-12",
+    "temporal_resolution": "monthly → climatology",
+    "variables": [
+      "tmax",
+      "tmin",
+      "ppt",
+      "vap"
+    ],
+    "access_method": "THREDDS NetCDF Subset Service (horizStride=6)",
+    "mode": "live",
+    "retrieved_at": "2026-10-04T11:34:31+00:00",
+    "raw_path": "data/raw/terraclimate/global_s6",
+    "checksum": null,
+    "record_count": null,
+    "notes": "Global layer used only for SDM training and prediction."
   },
   {
     "id": "terraclimate",

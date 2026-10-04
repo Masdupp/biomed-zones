@@ -1,0 +1,649 @@
+{
+  "_about": "Hand-written species content. `biomed-pipeline species` enriches it with GBIF taxonomy and IUCN status, verifies every DOI with Crossref and every URL over HTTP, and writes data/reference/species.json. Tolerance bands are literature-derived approximations (see `tolerance_note`) and must be validated by a domain expert before operational use.",
+  "parameter_semantics": {
+    "fit": "Triangular/trapezoid fit on the annual-mean feature: 100 inside [opt_min, opt_max], linear to 0 at min and max, 0 outside.",
+    "hard_constraints": "Survival limits checked on extreme values (coldest/warmest month, lowest salinity or oxygen month, frost days). Any violation caps the expert score."
+  },
+  "species": [
+    {
+      "id": "arenicola-marina",
+      "scientific_name": "Arenicola marina",
+      "common_name_en": "Lugworm",
+      "common_name_fr": "Arénicole des pêcheurs",
+      "habitat": "marine",
+      "native_territories": [
+        "FXX"
+      ],
+      "cultivation_difficulty": "moderate",
+      "cultivation_note": "Commercial lugworm farming exists for bait; broodstock conditioning and larval rearing are documented.",
+      "medical_applications": [
+        {
+          "compound": "M101 extracellular haemoglobin (HEMO2life®)",
+          "use": "Oxygen carrier added to organ preservation solutions (kidney transplantation)",
+          "clinical_status": "First-in-human safety study completed (2020); efficacy trial OxyOp2 (phase III design)",
+          "references": [
+            "le-meur-2020",
+            "le-meur-2023",
+            "rousselot-2006"
+          ]
+        }
+      ],
+      "tolerances": {
+        "temperature": {
+          "min": 0,
+          "opt_min": 8,
+          "opt_max": 18,
+          "max": 26,
+          "lethal": true
+        },
+        "salinity": {
+          "min": 12,
+          "opt_min": 25,
+          "opt_max": 35,
+          "max": 40,
+          "lethal": true
+        },
+        "ph": {
+          "min": 7.4,
+          "opt_min": 7.8,
+          "opt_max": 8.3,
+          "max": 8.7,
+          "lethal": false
+        },
+        "depth": {
+          "min": -8,
+          "opt_min": -6,
+          "opt_max": 2,
+          "max": 15,
+          "lethal": false
+        },
+        "oxygen": {
+          "min": 60,
+          "opt_min": 180,
+          "opt_max": 350,
+          "max": 450,
+          "lethal": true
+        }
+      },
+      "tolerance_note": "Intertidal to shallow subtidal sandy sediments (depth relative to chart datum: negative = above datum). Eurythermal (White Sea to Bay of Biscay populations), euryhaline down to brackish conditions, tolerant of burrow hypoxia.",
+      "tolerance_references": [
+        "sommer-portner-2002",
+        "wells-1966",
+        "betteley-watson-2008"
+      ]
+    },
+    {
+      "id": "conus-magus",
+      "scientific_name": "Conus magus",
+      "common_name_en": "Magician's cone",
+      "common_name_fr": "Cône magicien",
+      "habitat": "marine",
+      "native_territories": [
+        "REU",
+        "MYT"
+      ],
+      "native_note": "Indo-Pacific species; no GBIF/OBIS record inside Réunion or Mayotte waters in the training data (presence there to verify).",
+      "cultivation_difficulty": "high",
+      "cultivation_note": "No established aquaculture; venom peptides are produced synthetically (ziconotide is a synthetic peptide).",
+      "medical_applications": [
+        {
+          "compound": "ω-conotoxin MVIIA (ziconotide, Prialt®)",
+          "use": "Intrathecal analgesic for severe chronic pain (N-type calcium channel blocker)",
+          "clinical_status": "Approved (FDA 2004, EMA 2005); manufactured by chemical synthesis",
+          "references": [
+            "miljanich-2004",
+            "olivera-1985",
+            "lewis-garcia-2003"
+          ]
+        }
+      ],
+      "tolerances": {
+        "temperature": {
+          "min": 20,
+          "opt_min": 25,
+          "opt_max": 29,
+          "max": 32,
+          "lethal": true
+        },
+        "salinity": {
+          "min": 30,
+          "opt_min": 33,
+          "opt_max": 36,
+          "max": 38,
+          "lethal": true
+        },
+        "ph": {
+          "min": 7.8,
+          "opt_min": 8.0,
+          "opt_max": 8.3,
+          "max": 8.5,
+          "lethal": false
+        },
+        "depth": {
+          "min": -1,
+          "opt_min": 0,
+          "opt_max": 20,
+          "max": 50,
+          "lethal": false
+        },
+        "oxygen": {
+          "min": 120,
+          "opt_min": 180,
+          "opt_max": 250,
+          "max": 300,
+          "lethal": false
+        }
+      },
+      "tolerance_note": "Tropical coral-reef and lagoon habitats. Bands are generic tropical-reef ranges; species-specific physiological limits are not published (to verify).",
+      "tolerance_references": [
+        "olivera-1985"
+      ]
+    },
+    {
+      "id": "limulus-polyphemus",
+      "scientific_name": "Limulus polyphemus",
+      "common_name_en": "Atlantic horseshoe crab",
+      "common_name_fr": "Limule atlantique",
+      "habitat": "marine",
+      "native_territories": [],
+      "native_note": "Native to the western North Atlantic and Gulf of Mexico. Not native to any French territory: open-water culture would be an introduction risk.",
+      "cultivation_difficulty": "high",
+      "cultivation_note": "Biomedical supply relies on capture, bleeding and release of wild crabs; recombinant factor C is a validated animal-free alternative.",
+      "medical_applications": [
+        {
+          "compound": "Limulus amebocyte lysate (LAL)",
+          "use": "Detection of bacterial endotoxins in injectable drugs and medical devices",
+          "clinical_status": "Pharmacopoeial standard test in routine industrial use",
+          "references": [
+            "krisfalusi-gannon-2018",
+            "maloney-2018"
+          ]
+        }
+      ],
+      "tolerances": {
+        "temperature": {
+          "min": 0,
+          "opt_min": 15,
+          "opt_max": 28,
+          "max": 34,
+          "lethal": true
+        },
+        "salinity": {
+          "min": 7,
+          "opt_min": 20,
+          "opt_max": 32,
+          "max": 40,
+          "lethal": true
+        },
+        "ph": {
+          "min": 7.4,
+          "opt_min": 7.8,
+          "opt_max": 8.3,
+          "max": 8.6,
+          "lethal": false
+        },
+        "depth": {
+          "min": -3,
+          "opt_min": 0,
+          "opt_max": 20,
+          "max": 60,
+          "lethal": false
+        },
+        "oxygen": {
+          "min": 60,
+          "opt_min": 180,
+          "opt_max": 300,
+          "max": 400,
+          "lethal": false
+        }
+      },
+      "tolerance_note": "Estuarine and shallow coastal waters; spawns on sandy beaches. Larval growth tolerates wide temperature-salinity ranges.",
+      "tolerance_references": [
+        "laughlin-1983",
+        "cabi-limulus",
+        "krisfalusi-gannon-2018"
+      ]
+    },
+    {
+      "id": "holothuria-tubulosa",
+      "scientific_name": "Holothuria tubulosa",
+      "common_name_en": "Tubular sea cucumber",
+      "common_name_fr": "Holothurie tubuleuse",
+      "habitat": "marine",
+      "native_territories": [
+        "FXX"
+      ],
+      "cultivation_difficulty": "moderate",
+      "cultivation_note": "Experimental co-culture and integrated multi-trophic aquaculture in the Mediterranean.",
+      "medical_applications": [
+        {
+          "compound": "Triterpene glycosides (saponins), fucosylated chondroitin sulfate, collagen peptides",
+          "use": "Antioxidant, anticoagulant, anti-inflammatory and antitumour activities reported for sea-cucumber extracts",
+          "clinical_status": "Preclinical; species-specific evidence for H. tubulosa is limited",
+          "references": [
+            "bordbar-2011"
+          ]
+        }
+      ],
+      "tolerances": {
+        "temperature": {
+          "min": 10,
+          "opt_min": 15,
+          "opt_max": 25,
+          "max": 29,
+          "lethal": true
+        },
+        "salinity": {
+          "min": 30,
+          "opt_min": 35,
+          "opt_max": 39,
+          "max": 40,
+          "lethal": true
+        },
+        "ph": {
+          "min": 7.6,
+          "opt_min": 7.9,
+          "opt_max": 8.3,
+          "max": 8.5,
+          "lethal": false
+        },
+        "depth": {
+          "min": 0,
+          "opt_min": 1,
+          "opt_max": 30,
+          "max": 100,
+          "lethal": false
+        },
+        "oxygen": {
+          "min": 100,
+          "opt_min": 180,
+          "opt_max": 280,
+          "max": 350,
+          "lethal": false
+        }
+      },
+      "tolerance_note": "Mediterranean and adjacent Atlantic seagrass (Posidonia) and soft-bottom habitats.",
+      "tolerance_references": [
+        "iucn-holothuria-2013",
+        "gerceklioglu-tolon-2025",
+        "david-2026"
+      ]
+    },
+    {
+      "id": "danio-rerio",
+      "scientific_name": "Danio rerio",
+      "common_name_en": "Zebrafish",
+      "common_name_fr": "Poisson zèbre",
+      "habitat": "freshwater",
+      "native_territories": [],
+      "native_note": "Freshwater fish native to South Asia. Not native to France; release into the wild is not acceptable.",
+      "cultivation_difficulty": "low",
+      "cultivation_note": "Routinely bred in recirculating laboratory systems; only controlled indoor culture is realistic in France.",
+      "medical_applications": [
+        {
+          "compound": "Whole-organism model; e.g. 16,16-dimethyl prostaglandin E2 identified in a zebrafish chemical screen",
+          "use": "Drug discovery and toxicology; dmPGE2 enhancement of cord-blood haematopoietic stem cells",
+          "clinical_status": "Research model; dmPGE2 progressed to clinical trials",
+          "references": [
+            "north-2007",
+            "zon-peterson-2005",
+            "lawrence-2007"
+          ]
+        }
+      ],
+      "tolerances": {
+        "temperature": {
+          "min": 12,
+          "opt_min": 24,
+          "opt_max": 30,
+          "max": 38,
+          "lethal": true
+        }
+      },
+      "tolerance_note": "Water temperature ranges; scored with air temperature as a proxy because no freshwater layer is in scope. Survives 6.7-41.7 °C in acute tests, optimal around 28 °C.",
+      "tolerance_references": [
+        "lopez-olmeda-2011",
+        "lawrence-2007"
+      ]
+    },
+    {
+      "id": "ambystoma-mexicanum",
+      "scientific_name": "Ambystoma mexicanum",
+      "common_name_en": "Axolotl",
+      "common_name_fr": "Axolotl",
+      "habitat": "freshwater",
+      "native_territories": [],
+      "native_note": "Micro-endemic to the Xochimilco canals (Mexico City), critically endangered in the wild. Not native to France.",
+      "cultivation_difficulty": "moderate",
+      "cultivation_note": "Laboratory colonies are maintained worldwide; only controlled indoor culture is realistic and appropriate.",
+      "medical_applications": [
+        {
+          "compound": "Whole-organism model of limb, spinal cord and organ regeneration",
+          "use": "Regenerative-medicine research",
+          "clinical_status": "Research model (preclinical)",
+          "references": [
+            "nowoshilow-2018",
+            "khattak-2014"
+          ]
+        }
+      ],
+      "tolerances": {
+        "temperature": {
+          "min": 6,
+          "opt_min": 14,
+          "opt_max": 19,
+          "max": 24,
+          "lethal": true
+        }
+      },
+      "tolerance_note": "Water temperature ranges; scored with air temperature as a proxy. Prolonged exposure above ~24 °C is harmful.",
+      "tolerance_references": [
+        "khattak-2014",
+        "contreras-2009"
+      ]
+    },
+    {
+      "id": "catharanthus-roseus",
+      "scientific_name": "Catharanthus roseus",
+      "common_name_en": "Madagascar periwinkle",
+      "common_name_fr": "Pervenche de Madagascar",
+      "habitat": "terrestrial",
+      "native_territories": [],
+      "native_note": "Native to Madagascar; widely naturalised in the tropics, including the French overseas regions.",
+      "cultivation_difficulty": "low",
+      "cultivation_note": "Grown as a field crop in tropical regions; frost-sensitive, greenhouse-only in temperate climates.",
+      "medical_applications": [
+        {
+          "compound": "Vinblastine, vincristine (vinca alkaloids)",
+          "use": "Chemotherapy (Hodgkin lymphoma, acute leukaemia and other cancers)",
+          "clinical_status": "Approved medicines; extracted from cultivated plants",
+          "references": [
+            "noble-1990",
+            "van-der-heijden-2004"
+          ]
+        }
+      ],
+      "tolerances": {
+        "temperature": {
+          "min": 10,
+          "opt_min": 20,
+          "opt_max": 30,
+          "max": 36,
+          "lethal": true,
+          "extreme_min": 3
+        },
+        "soil_ph": {
+          "min": 4.5,
+          "opt_min": 5.5,
+          "opt_max": 7.0,
+          "max": 8.5,
+          "lethal": false
+        },
+        "humidity": {
+          "min": 40,
+          "opt_min": 60,
+          "opt_max": 85,
+          "max": 95,
+          "lethal": false
+        },
+        "rainfall": {
+          "min": 300,
+          "opt_min": 1000,
+          "opt_max": 2000,
+          "max": 4000,
+          "lethal": false
+        },
+        "altitude": {
+          "min": 0,
+          "opt_min": 0,
+          "opt_max": 800,
+          "max": 1800,
+          "lethal": false
+        }
+      },
+      "frost_sensitive": true,
+      "tolerance_note": "Tropical perennial grown as an annual elsewhere; killed by frost.",
+      "tolerance_references": [
+        "cabi-catharanthus",
+        "van-der-heijden-2004"
+      ]
+    },
+    {
+      "id": "salix-alba",
+      "scientific_name": "Salix alba",
+      "common_name_en": "White willow",
+      "common_name_fr": "Saule blanc",
+      "habitat": "terrestrial",
+      "native_territories": [
+        "FXX"
+      ],
+      "cultivation_difficulty": "low",
+      "cultivation_note": "Fast-growing riparian tree, easily propagated from cuttings; bark harvested from coppice.",
+      "medical_applications": [
+        {
+          "compound": "Salicin and other salicylates (willow bark extract)",
+          "use": "Analgesic and anti-inflammatory herbal medicine (low back pain, musculoskeletal pain); historical precursor of aspirin",
+          "clinical_status": "Herbal medicinal product with EU monograph; clinical evidence moderate",
+          "references": [
+            "vlachojannis-2009",
+            "mahdi-2010",
+            "ema-salicis-cortex"
+          ]
+        }
+      ],
+      "tolerances": {
+        "temperature": {
+          "min": 0,
+          "opt_min": 7,
+          "opt_max": 14,
+          "max": 22,
+          "lethal": true,
+          "extreme_max": 38,
+          "extreme_min": -40
+        },
+        "soil_ph": {
+          "min": 4.5,
+          "opt_min": 5.5,
+          "opt_max": 7.5,
+          "max": 8.5,
+          "lethal": false
+        },
+        "humidity": {
+          "min": 50,
+          "opt_min": 65,
+          "opt_max": 85,
+          "max": 95,
+          "lethal": false
+        },
+        "rainfall": {
+          "min": 300,
+          "opt_min": 600,
+          "opt_max": 1200,
+          "max": 2500,
+          "lethal": false
+        },
+        "altitude": {
+          "min": 0,
+          "opt_min": 0,
+          "opt_max": 1000,
+          "max": 1800,
+          "lethal": false
+        }
+      },
+      "tolerance_note": "Riparian species: groundwater can compensate low rainfall, which the rainfall band does not capture.",
+      "tolerance_references": [
+        "cabi-salix"
+      ]
+    },
+    {
+      "id": "ginkgo-biloba",
+      "scientific_name": "Ginkgo biloba",
+      "common_name_en": "Ginkgo",
+      "common_name_fr": "Ginkgo",
+      "habitat": "terrestrial",
+      "native_territories": [],
+      "native_note": "Relict wild populations in China only; planted worldwide.",
+      "cultivation_difficulty": "low",
+      "cultivation_note": "Leaf plantations exist (e.g. in France and the USA) for extract production.",
+      "medical_applications": [
+        {
+          "compound": "EGb 761 standardised leaf extract (ginkgolides, bilobalide, flavonoid glycosides)",
+          "use": "Symptomatic treatment of cognitive impairment",
+          "clinical_status": "Herbal medicinal product; did not prevent dementia in the GEM trial; Cochrane review inconclusive",
+          "references": [
+            "dekosky-2008",
+            "birks-2009"
+          ]
+        }
+      ],
+      "tolerances": {
+        "temperature": {
+          "min": 3,
+          "opt_min": 10,
+          "opt_max": 18,
+          "max": 26,
+          "lethal": true,
+          "extreme_min": -30,
+          "extreme_max": 38
+        },
+        "soil_ph": {
+          "min": 4.5,
+          "opt_min": 5.5,
+          "opt_max": 7.5,
+          "max": 8.5,
+          "lethal": false
+        },
+        "humidity": {
+          "min": 40,
+          "opt_min": 55,
+          "opt_max": 80,
+          "max": 95,
+          "lethal": false
+        },
+        "rainfall": {
+          "min": 400,
+          "opt_min": 600,
+          "opt_max": 1500,
+          "max": 3000,
+          "lethal": false
+        },
+        "altitude": {
+          "min": 0,
+          "opt_min": 0,
+          "opt_max": 1500,
+          "max": 2500,
+          "lethal": false
+        }
+      },
+      "tolerance_note": "Temperate deciduous tree, very hardy and pollution-tolerant.",
+      "tolerance_references": [
+        "cabi-ginkgo"
+      ]
+    }
+  ],
+  "references": {
+    "le-meur-2020": {
+      "doi": "10.1111/ajt.15798"
+    },
+    "le-meur-2023": {
+      "doi": "10.1186/s13063-023-07302-3"
+    },
+    "rousselot-2006": {
+      "doi": "10.1002/biot.200500049"
+    },
+    "sommer-portner-2002": {
+      "doi": "10.3354/meps240171"
+    },
+    "wells-1966": {
+      "doi": "10.1016/0077-7579(66)90016-0"
+    },
+    "betteley-watson-2008": {
+      "doi": "10.1016/j.aquaculture.2008.03.051"
+    },
+    "miljanich-2004": {
+      "doi": "10.2174/0929867043363884"
+    },
+    "olivera-1985": {
+      "doi": "10.1126/science.4071055"
+    },
+    "lewis-garcia-2003": {
+      "doi": "10.1038/nrd1197"
+    },
+    "krisfalusi-gannon-2018": {
+      "doi": "10.3389/fmars.2018.00185"
+    },
+    "maloney-2018": {
+      "doi": "10.1371/journal.pbio.2006607"
+    },
+    "laughlin-1983": {
+      "doi": "10.2307/1541193"
+    },
+    "cabi-limulus": {
+      "doi": "10.1079/cabicompendium.77444"
+    },
+    "bordbar-2011": {
+      "doi": "10.3390/md9101761"
+    },
+    "iucn-holothuria-2013": {
+      "doi": "10.2305/iucn.uk.2013-1.rlts.t180455a1632895.en"
+    },
+    "gerceklioglu-tolon-2025": {
+      "doi": "10.3390/fishes10110560"
+    },
+    "david-2026": {
+      "doi": "10.1016/j.aquaculture.2025.743330"
+    },
+    "north-2007": {
+      "doi": "10.1038/nature05883"
+    },
+    "zon-peterson-2005": {
+      "doi": "10.1038/nrd1606"
+    },
+    "lawrence-2007": {
+      "doi": "10.1016/j.aquaculture.2007.04.077"
+    },
+    "lopez-olmeda-2011": {
+      "doi": "10.1016/j.jtherbio.2010.12.005"
+    },
+    "nowoshilow-2018": {
+      "doi": "10.1038/nature25458"
+    },
+    "khattak-2014": {
+      "doi": "10.1038/nprot.2014.040"
+    },
+    "contreras-2009": {
+      "doi": "10.1016/j.biocon.2009.07.008"
+    },
+    "noble-1990": {
+      "doi": "10.1139/o90-197"
+    },
+    "van-der-heijden-2004": {
+      "doi": "10.2174/0929867043455846"
+    },
+    "cabi-catharanthus": {
+      "doi": "10.1079/cabicompendium.16884"
+    },
+    "vlachojannis-2009": {
+      "doi": "10.1002/ptr.2747"
+    },
+    "mahdi-2010": {
+      "doi": "10.1016/j.jscs.2010.04.010"
+    },
+    "ema-salicis-cortex": {
+      "url": "https://www.ema.europa.eu/en/medicines/herbal/salicis-cortex",
+      "title": "EMA herbal monograph: Salicis cortex (willow bark)"
+    },
+    "cabi-salix": {
+      "doi": "10.1079/cabicompendium.48510"
+    },
+    "dekosky-2008": {
+      "doi": "10.1001/jama.2008.683"
+    },
+    "birks-2009": {
+      "doi": "10.1002/14651858.CD003120.pub3"
+    },
+    "cabi-ginkgo": {
+      "doi": "10.1079/cabicompendium.25193"
+    }
+  }
+}

@@ -1,11 +1,11 @@
 {
   "version": "2026.10.04",
-  "created_at": "2026-10-04T10:46:31+00:00",
+  "created_at": "2026-10-04T11:44:25+00:00",
   "rows": {
     "cells_r7": 150146,
     "cells_r6": 22030,
     "occurrences": 278852,
-    "provenance": 17
+    "provenance": 20
   },
   "provenance_modes": {
     "cmems-bgc": "live",
@@ -15,6 +15,7 @@
     "derived-12nm-buffer": "derived",
     "emodnet-bathymetry": "live",
     "esa-worldcover-2021": "live",
+    "etopo-2022": "live",
     "gbif": "live",
     "gmrt": "live",
     "marineregions-12nm": "live",
@@ -24,40 +25,154 @@
     "openmeteo-era5land": "live",
     "patrinat-protected-areas": "live",
     "soilgrids-2": "live",
+    "soilgrids-global": "live",
+    "terraclimate-global": "live",
     "terraclimate": "live"
   },
   "files": {
     "features_r6.parquet": {
-      "bytes": 2709685,
-      "sha256": "dba62c2c1126bb5dff1b0e921d6fce9ebec0162d979252138d593cadd51aa31e"
+      "bytes": 3324420,
+      "sha256": "ff1dca10423912a4b4451818f34566c3b441ccf7d6849b1adf0eee7ec3c762a8"
     },
     "features_r7.parquet": {
-      "bytes": 13212766,
-      "sha256": "111be4ccc734fc837510e8876382d5dd379584d7e3a052e98fbe98f2310fd28d"
+      "bytes": 14424730,
+      "sha256": "e6c6457ac5b79a0f11d861b3c464a1d3b544b096afadffa3f9a6d08c99c601ec"
     },
     "gbif_taxon_keys.json": {
       "bytes": 274,
       "sha256": "c60e1cff04ccd07cba5bac5a5f8347e9b33d44e34088a160cddd3f90ba72d136"
+    },
+    "model/run-20261004-113944/arenicola-marina/calibrator.joblib": {
+      "bytes": 1879,
+      "sha256": "21463ba4ef0439e1dab74e9fd08a239ff0b089ee84b4ebcd93f1246fbd4519d0"
+    },
+    "model/run-20261004-113944/arenicola-marina/metrics.json": {
+      "bytes": 7863,
+      "sha256": "eeddcfa3b4761de5ac0deb496d95d432d37cc341830dd61175843a13d0f66583"
+    },
+    "model/run-20261004-113944/arenicola-marina/model.txt": {
+      "bytes": 695871,
+      "sha256": "a5ac93a5b42f816b0bb3427831d93041af3d4fa341af8d68dd9ac31b0d3a3284"
+    },
+    "model/run-20261004-113944/catharanthus-roseus/calibrator.joblib": {
+      "bytes": 2391,
+      "sha256": "fc569bdda738b11b763644648890cafcba5a8b983d3a1059c7436d0660b98182"
+    },
+    "model/run-20261004-113944/catharanthus-roseus/metrics.json": {
+      "bytes": 8055,
+      "sha256": "a3381ef9f4154230e9db07ea944688b3f5f37402524c68fc7ac16d87b729153e"
+    },
+    "model/run-20261004-113944/catharanthus-roseus/model.txt": {
+      "bytes": 696249,
+      "sha256": "e80b9a64314acfee9febb311c40c0c75230bc08a169524ac70af2028ef55b7ea"
+    },
+    "model/run-20261004-113944/conus-magus/calibrator.joblib": {
+      "bytes": 951,
+      "sha256": "c0f36b8c4b158994411d5f61abd17a76a76a542119830f4ea01ef75dbdc4ee63"
+    },
+    "model/run-20261004-113944/conus-magus/metrics.json": {
+      "bytes": 7351,
+      "sha256": "44e8089f7c0668b750236c11cc887c792a9b4fcbe658af7729fcfd8087ad1922"
+    },
+    "model/run-20261004-113944/conus-magus/model.txt": {
+      "bytes": 675641,
+      "sha256": "44011d9ce760bed38b073aed9f755d6258e5186b24554cba34b25a585e82cff4"
+    },
+    "model/run-20261004-113944/danio-rerio/calibrator.joblib": {
+      "bytes": 1047,
+      "sha256": "e474a65051a15d2490b3c57fd9a0192013db925d2b6e351b596c5a4a5577125f"
+    },
+    "model/run-20261004-113944/danio-rerio/metrics.json": {
+      "bytes": 7632,
+      "sha256": "19fc76e1ff653bb5afbb2cc24a5fc43472c3760fb0982fb163289e9d9f70ee70"
+    },
+    "model/run-20261004-113944/danio-rerio/model.txt": {
+      "bytes": 686492,
+      "sha256": "a331718937c854c37cc8d3a143024d119da376caa70bbba45d3aa210fbd33e37"
+    },
+    "model/run-20261004-113944/ginkgo-biloba/calibrator.joblib": {
+      "bytes": 1583,
+      "sha256": "24b68e842f24cb8932a74af9c1d1cf0f864e5727f4c4582b35534bc7b47c665d"
+    },
+    "model/run-20261004-113944/ginkgo-biloba/metrics.json": {
+      "bytes": 8031,
+      "sha256": "cba2e070c21fbfbdf5d3d1d21617b60e292a22719e5c95310574f7ec2eebedb9"
+    },
+    "model/run-20261004-113944/ginkgo-biloba/model.txt": {
+      "bytes": 693144,
+      "sha256": "7797bccdb608c90d9e12f1cf1fa102b6ff122f7b8776e792b2a9c50751d19d0a"
+    },
+    "model/run-20261004-113944/holothuria-tubulosa/calibrator.joblib": {
+      "bytes": 1175,
+      "sha256": "4c8cab3033b0ca93836e1bc601a9246832d9c3764687e2d7cd2099567df5e51a"
+    },
+    "model/run-20261004-113944/holothuria-tubulosa/metrics.json": {
+      "bytes": 7347,
+      "sha256": "c93545fb92a3b0d6b273fa83480790a5c59fb33c3da9b3d1f45e830221393bee"
+    },
+    "model/run-20261004-113944/holothuria-tubulosa/model.txt": {
+      "bytes": 677868,
+      "sha256": "8a99511ce0ffec02bb4f12c573e7ede9adef5a07eec203e7c2549612d0bf929f"
+    },
+    "model/run-20261004-113944/limulus-polyphemus/calibrator.joblib": {
+      "bytes": 1559,
+      "sha256": "f756577230af1ce143ffd1b804c09ce4ced9ef1966c7dd77a87377f45d4151c2"
+    },
+    "model/run-20261004-113944/limulus-polyphemus/metrics.json": {
+      "bytes": 7994,
+      "sha256": "c43513837feb8e7ceb5c50b0b628ed89fb5f2985f0a91e22d6c281ba15486fe4"
+    },
+    "model/run-20261004-113944/limulus-polyphemus/model.txt": {
+      "bytes": 694983,
+      "sha256": "9b43813dfcd730e655847ee1402d51f045a4893d888dff7effde35025d48ccb5"
+    },
+    "model/run-20261004-113944/salix-alba/calibrator.joblib": {
+      "bytes": 2263,
+      "sha256": "832b880810ec7d580333ce2edea716936c96625bbe33fcb2e1658a740294318c"
+    },
+    "model/run-20261004-113944/salix-alba/metrics.json": {
+      "bytes": 8060,
+      "sha256": "f2816e0bf028c251fe1c939c30b14bf4be2163dcc7f86f4634d62e16adfdc468"
+    },
+    "model/run-20261004-113944/salix-alba/model.txt": {
+      "bytes": 697969,
+      "sha256": "d294dfe0d2135b7389066dde8fe32cab4429a29568a5e5fd896d4815eea00231"
+    },
+    "model/run.json": {
+      "bytes": 64371,
+      "sha256": "e3217061c674f956fe6714bebe8bd4398e84040cc6ebed33b802c63e9674160b"
     },
     "occurrences.parquet": {
       "bytes": 5830847,
       "sha256": "8d758bfed6dea344f0d50f5c1c4db238ff865494e7642a5450669f99426a6d81"
     },
     "provenance.json": {
-      "bytes": 18554,
-      "sha256": "4ea1ee9672f0b03410f271763f831d4a99fc0ae079505e137ee1e9e367a62f42"
+      "bytes": 21386,
+      "sha256": "df0f7fbe23b5ab5bd40c93cc837a1bdf144b4b666b76a01a69dcfe7ef7c79a76"
     },
     "provenance_r6.parquet": {
-      "bytes": 119913,
-      "sha256": "20487f02c55f83e6d6d9db53eaa72f116ef67ebca0b2799f024d82b38b65d6ed"
+      "bytes": 146579,
+      "sha256": "69641d1d1f068ad48469a854044657f80ca9f9cad69a99c75aad6587ac0b4bd7"
     },
     "provenance_r7.parquet": {
-      "bytes": 352424,
-      "sha256": "6ce235b7e53365b8f6dd7ff2001913db604fdec3c2bd0cb41a9bae45ec603542"
+      "bytes": 414401,
+      "sha256": "9e08429ac4c82938d6dd58c2a27eed95b526aec87c64d851699845d6f377c651"
+    },
+    "scores.parquet": {
+      "bytes": 10772349,
+      "sha256": "b5921276e0e1b445d6824895868451390a52f2a0fc8d058e80507c0e19c4098c"
     },
     "territories.parquet": {
       "bytes": 1899300,
       "sha256": "3086646d82e88eb5201930213fbe4d842c131088e2f2a7369b829115198d5711"
+    },
+    "training.parquet": {
+      "bytes": 3098133,
+      "sha256": "a26e384a77081b8633d13906fd587f45d9fae41225f79ba6634b2ca28665c95c"
+    },
+    "training_meta.json": {
+      "bytes": 1240,
+      "sha256": "d49e9e796a012070a57a6e5f34ee48fbbf79d455bd0e017774941b0fd8bf80e3"
     }
   }
 }

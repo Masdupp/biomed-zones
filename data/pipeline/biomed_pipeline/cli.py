@@ -35,6 +35,7 @@ CELL_SOURCES = (
     "protected_areas",
     "landcover",
     "pressure",
+    "ml_layers",  # last: samples the global Copernicus / TerraClimate layers built above
 )
 ALL_SOURCES = (*BOUNDARY_SOURCES, "grid", *CELL_SOURCES, "occurrences")
 
@@ -135,6 +136,22 @@ def load_snapshot() -> None:
         typer.echo(f"no snapshot found at {manifest_path()} — nothing loaded", err=True)
         sys.exit(1)
     load_into_db()
+
+
+@app.command("training-data")
+def training_data() -> None:
+    """Build the SDM presence/background table (data/clean/ml/training.parquet)."""
+    from .sdm_data import build as run
+
+    run()
+
+
+@app.command()
+def species() -> None:
+    """Build data/reference/species.json (GBIF taxonomy + IUCN, Crossref-verified references)."""
+    from .species_profiles import build as run
+
+    run()
 
 
 @app.command()
