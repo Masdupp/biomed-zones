@@ -10,8 +10,3 @@ export const PRIMARY_NAV: NavItem[] = [
   { to: '/model', label: 'Model' },
   { to: '/sources', label: 'Data sources' },
 ];
-
-export const SECONDARY_NAV: NavItem[] = [
-  { to: '/contribute', label: 'Contribute' },
-  { to: '/admin', label: 'Admin' },
-];

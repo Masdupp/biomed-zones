@@ -12,7 +12,7 @@ import {
 import { conflict, notFound, unauthorized } from '../lib/errors';
 import { body } from '../lib/validate';
 import { currentUser, requireAuth } from '../middleware/auth';
-import { authLimiter } from '../middleware/security';
+import { authLimiter, refreshLimiter } from '../middleware/security';
 import { authed, errors, json, registry } from '../openapi';
 
 export const authRouter = Router();
@@ -111,7 +111,7 @@ registry.registerPath({
   summary: 'Rotate the refresh token and issue a new access token',
   responses: { 200: json(PublicUser), ...errors(401, 429) },
 });
-authRouter.post('/auth/refresh', authLimiter, async (req, res) => {
+authRouter.post('/auth/refresh', refreshLimiter, async (req, res) => {
   const user = await rotateSession(res, (req.cookies as Record<string, string>)[REFRESH_COOKIE]);
   res.json(publicUser(user));
 });
@@ -126,6 +126,24 @@ registry.registerPath({
 authRouter.post('/auth/logout', async (req, res) => {
   await endSession(res, (req.cookies as Record<string, string>)[REFRESH_COOKIE]);
   res.status(204).end();
+});
+
+registry.registerPath({
+  method: 'get',
+  path: '/auth/session',
+  tags: ['Auth'],
+  summary: 'Current session for the web client (always 200)',
+  description:
+    '`user` is set when the access token is valid. `refreshable` tells the client whether a refresh cookie ' +
+    'is present (the cookie itself is httpOnly), so anonymous visitors never trigger refresh attempts.',
+  responses: { 200: json(z.object({ user: PublicUser.nullable(), refreshable: z.boolean() })) },
+});
+authRouter.get('/auth/session', async (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const refreshable = Boolean((req.cookies as Record<string, string>)[REFRESH_COOKIE]);
+  if (!req.user) return void res.json({ user: null, refreshable });
+  const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+  res.json({ user: user ? publicUser(user) : null, refreshable });
 });
 
 registry.registerPath({

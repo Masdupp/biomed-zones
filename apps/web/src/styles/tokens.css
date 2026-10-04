@@ -35,6 +35,15 @@
 
   --focus-ring: #0f766e;
 
+  /* Chart series (dataviz reference palette, validated on these surfaces) */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --div-pos: #2a78d6;
+  --div-neg: #e34948;
+  --chart-grid: #e7e5e4;
+
   /* Typography */
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -74,6 +83,13 @@
   --danger: #f87171;
   --success: #4ade80;
   --focus-ring: #2bb3a6;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --div-pos: #3987e5;
+  --div-neg: #e66767;
+  --chart-grid: #222c36;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -97,6 +113,13 @@
     --danger: #f87171;
     --success: #4ade80;
     --focus-ring: #2bb3a6;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --div-pos: #3987e5;
+    --div-neg: #e66767;
+    --chart-grid: #222c36;
   }
 }
 

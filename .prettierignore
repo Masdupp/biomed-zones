@@ -6,3 +6,5 @@ data/snapshot
 data/reference
 docs/model
 docs/API
+apps/web/public/basemap
+apps/web/public/docs

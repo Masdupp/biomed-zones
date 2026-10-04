@@ -138,6 +138,14 @@ def load_snapshot() -> None:
     load_into_db()
 
 
+@app.command()
+def basemap() -> None:
+    """Write the offline vector basemap for the web app (apps/web/public/basemap)."""
+    from .basemap import build as run
+
+    typer.echo(run())
+
+
 @app.command("training-data")
 def training_data() -> None:
     """Build the SDM presence/background table (data/clean/ml/training.parquet)."""

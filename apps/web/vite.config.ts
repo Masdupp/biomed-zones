@@ -11,8 +11,14 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/api': { target: 'http://localhost:3001', rewrite: (p) => p.replace(/^\/api/, '') },
-      '/ml': { target: 'http://localhost:8001', rewrite: (p) => p.replace(/^\/ml/, '') },
+      '/api': {
+        target: process.env.API_PROXY ?? 'http://localhost:3001',
+        rewrite: (p) => p.replace(/^\/api/, ''),
+      },
+      '/ml': {
+        target: process.env.ML_PROXY ?? 'http://localhost:8001',
+        rewrite: (p) => p.replace(/^\/ml/, ''),
+      },
     },
   },
   test: {

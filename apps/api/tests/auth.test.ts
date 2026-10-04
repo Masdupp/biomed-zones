@@ -79,3 +79,18 @@ describe('auth', () => {
     expect(res.body.role).toBe('ADMIN');
   });
 });
+
+describe('session endpoint', () => {
+  it('answers 200 for anonymous visitors without suggesting a refresh', async () => {
+    const res = await request(app).get('/auth/session');
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ user: null, refreshable: false });
+  });
+
+  it('returns the user when logged in and flags refreshable sessions', async () => {
+    const { agent, email } = await newContributor();
+    const res = await agent.get('/auth/session');
+    expect(res.body.user.email).toBe(email);
+    expect(res.body.refreshable).toBe(true);
+  });
+});

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../lib/db';
 import { notFound } from '../lib/errors';
-import { params } from '../lib/validate';
+import { params, query } from '../lib/validate';
 import { errors, json, registry } from '../openapi';
 
 export const sourcesRouter = Router();
@@ -181,4 +181,42 @@ sourcesRouter.get('/stats', async (_req, res) => {
     },
     model: run ? { runId: run.id, finishedAt: run.finishedAt } : null,
   });
+});
+
+const CoverageQuery = z.object({
+  resolution: z.coerce
+    .number()
+    .int()
+    .refine((r) => r === 6 || r === 7, 'resolution must be 6 or 7')
+    .default(6),
+});
+let coverageCache: Record<number, object> = {};
+registry.registerPath({
+  method: 'get',
+  path: '/coverage',
+  tags: ['Sources'],
+  summary: 'Number of environmental features available per cell (data-coverage map)',
+  request: { query: CoverageQuery },
+  responses: { 200: json(z.object({}).passthrough()) },
+});
+sourcesRouter.get('/coverage', async (req, res) => {
+  const { resolution } = query(req, CoverageQuery);
+  if (!coverageCache[resolution]) {
+    const rows = await prisma.$queryRaw<{ h3: string; n: bigint }[]>`
+      SELECT c.h3, count(cf.value) AS n FROM cell c
+      LEFT JOIN cell_feature cf ON cf.h3 = c.h3 AND cf.feature_key NOT LIKE 'ml\\_%'
+      WHERE c.resolution = ${resolution} GROUP BY c.h3`;
+    const [defs] = await prisma.$queryRaw<{ n: bigint }[]>`
+      SELECT count(*) AS n FROM feature_def WHERE domain <> 'model'`;
+    coverageCache = {
+      ...coverageCache,
+      [resolution]: {
+        resolution,
+        featureDefinitions: Number(defs?.n ?? 0),
+        columns: ['h3', 'features'],
+        items: rows.map((r) => [r.h3, Number(r.n)]),
+      },
+    };
+  }
+  res.set('Cache-Control', 'public, max-age=3600').json(coverageCache[resolution]);
 });

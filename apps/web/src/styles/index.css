@@ -130,3 +130,113 @@
 .skip-link:focus {
   top: 8px;
 }
+
+/* Rendered project documents (model card, data report). */
+.prose-bz {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 80ch;
+}
+.prose-bz h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.75rem;
+}
+.prose-bz h2 {
+  font-size: 1rem;
+  margin: 1.75rem 0 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.prose-bz h3 {
+  font-size: 0.875rem;
+  margin: 1.25rem 0 0.5rem;
+}
+.prose-bz p,
+.prose-bz ul,
+.prose-bz ol {
+  margin: 0.5rem 0;
+}
+.prose-bz ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.prose-bz ol {
+  list-style: decimal;
+  padding-left: 1.25rem;
+}
+.prose-bz blockquote {
+  border-left: 2px solid var(--border-strong);
+  padding-left: 0.75rem;
+  color: var(--ink-muted);
+}
+.prose-bz code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--bg-subtle);
+  padding: 0 0.25rem;
+  border-radius: 3px;
+}
+.prose-bz a {
+  color: var(--brand);
+}
+.prose-bz img {
+  max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin: 0.75rem 0;
+}
+.prose-bz table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+  margin: 0.75rem 0;
+  max-width: 100%;
+}
+.prose-bz th,
+.prose-bz td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.375rem 0.625rem 0.375rem 0;
+  text-align: left;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.prose-bz th {
+  color: var(--ink-subtle);
+  font-weight: 500;
+}
+
+/* MapLibre controls follow the theme tokens (hairlines, no shadows). */
+.maplibregl-ctrl-group {
+  background: var(--surface) !important;
+  border: 1px solid var(--border-strong);
+  box-shadow: none !important;
+  border-radius: var(--radius-md) !important;
+}
+.maplibregl-ctrl-group button + button {
+  border-top-color: var(--border) !important;
+}
+[data-theme='dark'] .maplibregl-ctrl-icon {
+  filter: invert(0.9);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .maplibregl-ctrl-icon {
+    filter: invert(0.9);
+  }
+}
+.maplibregl-ctrl-attrib,
+.maplibregl-ctrl.maplibregl-ctrl-attrib.maplibregl-compact {
+  background: var(--surface) !important;
+  color: var(--ink-muted);
+  border: 1px solid var(--border);
+}
+.maplibregl-ctrl-attrib a {
+  color: var(--ink-muted);
+}
+.maplibregl-ctrl-attrib-button {
+  background-color: var(--surface) !important;
+}
+.deck-tooltip {
+  z-index: 20;
+}

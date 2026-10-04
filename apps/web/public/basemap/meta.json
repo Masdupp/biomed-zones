@@ -1,0 +1,65 @@
+{
+ "territories": [
+  {
+   "code": "FXX",
+   "name": "France m\u00e9tropolitaine",
+   "bbox": [
+    -6.0,
+    41.0,
+    10.0,
+    51.6
+   ]
+  },
+  {
+   "code": "GLP",
+   "name": "Guadeloupe",
+   "bbox": [
+    -62.0,
+    15.6,
+    -60.8,
+    16.8
+   ]
+  },
+  {
+   "code": "MTQ",
+   "name": "Martinique",
+   "bbox": [
+    -61.5,
+    14.1,
+    -60.5,
+    15.2
+   ]
+  },
+  {
+   "code": "GUF",
+   "name": "Guyane",
+   "bbox": [
+    -54.8,
+    2.0,
+    -51.2,
+    6.3
+   ]
+  },
+  {
+   "code": "REU",
+   "name": "La R\u00e9union",
+   "bbox": [
+    54.9,
+    -21.7,
+    56.1,
+    -20.5
+   ]
+  },
+  {
+   "code": "MYT",
+   "name": "Mayotte",
+   "bbox": [
+    44.7,
+    -13.3,
+    45.6,
+    -12.4
+   ]
+  }
+ ],
+ "attribution": "Natural Earth (public domain); Marine Regions (CC BY 4.0)"
+}

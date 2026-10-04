@@ -7,6 +7,8 @@ COPY apps/web/package.json apps/web/
 COPY apps/api/package.json apps/api/
 RUN --mount=type=cache,target=/root/.npm npm ci --workspace @biomed/web --include-workspace-root=false
 COPY apps/web apps/web
+# Generated docs rendered by the Model and Data pages (copied into public/docs at build).
+COPY docs docs
 RUN npm run build --workspace @biomed/web
 
 FROM nginxinc/nginx-unprivileged:1.27-alpine AS runtime

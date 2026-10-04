@@ -17,8 +17,10 @@ const limiter = (windowMs: number, limit: number, name: string) =>
 
 /** Whole API: generous, protects against scraping loops. */
 export const globalLimiter = limiter(15 * 60 * 1000, 1500, 'API');
-/** Login / register / refresh: brute-force protection. */
+/** Login / register: brute-force protection. */
 export const authLimiter = limiter(15 * 60 * 1000, 20, 'authentication');
+/** Token refresh: legitimate clients refresh every 15 min per tab; still bounded. */
+export const refreshLimiter = limiter(15 * 60 * 1000, 120, 'refresh');
 /** Contribution writes and reference checks (which call external services). */
 export const writeLimiter = limiter(60 * 60 * 1000, 120, 'write');
 /** PDF generation is CPU-bound. */

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04T12:11:24+00:00",
+  "generated_at": "2026-10-04T17:39:45+00:00",
   "parameter_semantics": {
     "fit": "Triangular/trapezoid fit on the annual-mean feature: 100 inside [opt_min, opt_max], linear to 0 at min and max, 0 outside.",
     "hard_constraints": "Survival limits checked on extreme values (coldest/warmest month, lowest salinity or oxygen month, frost days). Any violation caps the expert score."
@@ -107,7 +107,8 @@
         "author": "4028mdk09",
         "license": "CC BY-SA 3.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-        "credit": "Own work"
+        "credit": "Own work",
+        "local_path": "/photos/arenicola-marina.jpg"
       }
     },
     {
@@ -216,7 +217,8 @@
         "author": "Richard Parker",
         "license": "CC BY 2.0",
         "license_url": "https://creativecommons.org/licenses/by/2.0",
-        "credit": "Conus magus 56mm Uploaded by JoJan"
+        "credit": "Conus magus 56mm Uploaded by JoJan",
+        "local_path": "/photos/conus-magus.jpg"
       }
     },
     {
@@ -323,7 +325,8 @@
         "author": "Hans Hillewaert",
         "license": "CC BY-SA 4.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-        "credit": "Own work"
+        "credit": "Own work",
+        "local_path": "/photos/limulus-polyphemus.jpg"
       }
     },
     {
@@ -430,7 +433,8 @@
         "author": "Renaud Coupa",
         "license": "CC BY-SA 4.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-        "credit": "The uploader on Wikimedia Commons received this from the author/copyright holder."
+        "credit": "The uploader on Wikimedia Commons received this from the author/copyright holder.",
+        "local_path": "/photos/holothuria-tubulosa.jpg"
       }
     },
     {
@@ -509,7 +513,8 @@
         "author": "Azul",
         "license": "Copyrighted free use",
         "license_url": null,
-        "credit": "Own work"
+        "credit": "Own work",
+        "local_path": "/photos/danio-rerio.jpg"
       }
     },
     {
@@ -587,7 +592,8 @@
         "author": "LoKiLeCh",
         "license": "CC BY-SA 3.0",
         "license_url": "http://creativecommons.org/licenses/by-sa/3.0/",
-        "credit": "Own work"
+        "credit": "Own work",
+        "local_path": "/photos/ambystoma-mexicanum.jpg"
       }
     },
     {
@@ -695,7 +701,8 @@
         "author": "O Tupinólogo",
         "license": "CC BY 4.0",
         "license_url": "https://creativecommons.org/licenses/by/4.0",
-        "credit": "https://www.flickr.com/photos/157896962@N04/55231652268/"
+        "credit": "https://www.flickr.com/photos/157896962@N04/55231652268/",
+        "local_path": "/photos/catharanthus-roseus.jpg"
       }
     },
     {
@@ -804,7 +811,8 @@
         "author": "MPF",
         "license": "CC BY-SA 3.0",
         "license_url": "http://creativecommons.org/licenses/by-sa/3.0/",
-        "credit": "Own work"
+        "credit": "Own work",
+        "local_path": "/photos/salix-alba.jpg"
       }
     },
     {
@@ -911,7 +919,8 @@
         "author": "EecherplazGinkgo06.jpg : Cayambe derivative work: Ginkgotree ( talk )",
         "license": "CC BY-SA 3.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
-        "credit": "https://www.ginkgo-ratgeber.info/baum-pflanzen-schneiden-und-pflegen.html"
+        "credit": "https://www.ginkgo-ratgeber.info/baum-pflanzen-schneiden-und-pflegen.html",
+        "local_path": "/photos/ginkgo-biloba.jpg"
       }
     }
   ],

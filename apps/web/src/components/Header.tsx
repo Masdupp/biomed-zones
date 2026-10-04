@@ -4,7 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
-import { PRIMARY_NAV, SECONDARY_NAV } from './nav';
+import { PRIMARY_NAV } from './nav';
+import { useAuth } from '@/lib/auth';
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   [
@@ -14,6 +15,14 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
+  const secondary = [
+    { to: '/contribute', label: 'Contribute' },
+    ...(user?.role === 'ADMIN' ? [{ to: '/admin', label: 'Admin' }] : []),
+  ];
+  const account = user
+    ? { to: '/account', label: user.displayName }
+    : { to: '/login', label: 'Sign in' };
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-bg">
@@ -36,7 +45,7 @@ export function Header() {
 
         <div className="ml-auto flex items-center gap-1">
           <nav aria-label="Account" className="hidden items-center gap-1 md:flex">
-            {SECONDARY_NAV.map((item) => (
+            {secondary.map((item) => (
               <NavLink key={item.to} to={item.to} className={linkClass}>
                 {item.label}
               </NavLink>
@@ -44,10 +53,10 @@ export function Header() {
           </nav>
           <ThemeToggle />
           <Link
-            to="/login"
-            className="ml-1 hidden h-8 items-center rounded-md border border-border-strong px-3 text-sm text-ink transition-colors transition-base hover:bg-surface-hover md:inline-flex"
+            to={account.to}
+            className="ml-1 hidden h-8 max-w-[12rem] items-center truncate rounded-md border border-border-strong px-3 text-sm text-ink transition-colors transition-base hover:bg-surface-hover md:inline-flex"
           >
-            Sign in
+            {account.label}
           </Link>
           <button
             type="button"
@@ -74,15 +83,13 @@ export function Header() {
             className="overflow-hidden border-t border-border md:hidden"
           >
             <ul className="flex flex-col px-2 py-2">
-              {[...PRIMARY_NAV, ...SECONDARY_NAV, { to: '/login', label: 'Sign in' }].map(
-                (item) => (
-                  <li key={item.to}>
-                    <NavLink to={item.to} className={linkClass} onClick={() => setOpen(false)}>
-                      <span className="block px-2 py-2">{item.label}</span>
-                    </NavLink>
-                  </li>
-                ),
-              )}
+              {[...PRIMARY_NAV, ...secondary, account].map((item) => (
+                <li key={item.to}>
+                  <NavLink to={item.to} className={linkClass} onClick={() => setOpen(false)}>
+                    <span className="block px-2 py-2">{item.label}</span>
+                  </NavLink>
+                </li>
+              ))}
             </ul>
           </motion.nav>
         )}

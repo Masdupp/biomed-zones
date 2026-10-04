@@ -140,6 +140,37 @@ def wikimedia_photo(name: str) -> dict | None:
     }
 
 
+PHOTO_DIR = REPO_ROOT / "apps" / "web" / "public" / "photos"
+
+
+def vendor_photo(species_id: str, url: str) -> str | None:
+    """Keep compressed local copies (openly licensed, credited) so the offline demo shows photos.
+
+    Writes <id>.jpg (max 640 px) and <id>-thumb.jpg (max 192 px) for list views.
+    """
+    import io
+
+    from PIL import Image
+
+    PHOTO_DIR.mkdir(parents=True, exist_ok=True)
+    dest = PHOTO_DIR / f"{species_id}.jpg"
+    thumb = PHOTO_DIR / f"{species_id}-thumb.jpg"
+    if not (dest.exists() and thumb.exists()):
+        r = _get(url, timeout=60)
+        if (
+            r is None
+            or r.status_code != 200
+            or not r.headers.get("content-type", "").startswith("image/")
+        ):
+            return None
+        img = Image.open(io.BytesIO(r.content)).convert("RGB")
+        for path, size, quality in ((dest, 640, 78), (thumb, 192, 74)):
+            copy = img.copy()
+            copy.thumbnail((size, size))
+            copy.save(path, "JPEG", quality=quality, optimize=True, progressive=True)
+    return f"/photos/{species_id}.jpg"
+
+
 def verify_reference(key: str, ref: dict) -> dict:
     out = {"key": key, **ref}
     if "doi" in ref:
@@ -182,6 +213,8 @@ def build() -> dict:
         prof["photo"] = wikimedia_photo(s["scientific_name"]) or wikimedia_photo(
             s["common_name_en"]
         )
+        if prof["photo"]:
+            prof["photo"]["local_path"] = vendor_photo(s["id"], prof["photo"]["url"])
         used = {k for m in s["medical_applications"] for k in m["references"]}
         used |= set(s.get("tolerance_references", []))
         unknown = used - refs.keys()
