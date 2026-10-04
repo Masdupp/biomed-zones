@@ -20,3 +20,4 @@ services/ml/artifacts/runs/
 playwright-report/
 test-results/
 .DS_Store
+data/*.log

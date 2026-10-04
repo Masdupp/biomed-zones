@@ -8,7 +8,7 @@ COMPOSE := docker compose
 WEB_URL := http://localhost:8080
 
 .DEFAULT_GOAL := help
-.PHONY: help install images up demo down reset logs ps health lint typecheck test build ci ingest
+.PHONY: help install images up demo down reset logs ps health lint typecheck test build ci ingest data snapshot load-snapshot
 
 help: ## List targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -67,5 +67,22 @@ build: ## Production builds of the TypeScript apps
 
 ci: lint typecheck test build ## Everything CI runs
 
-ingest: ## Live ingestion from public sources (Phase 2)
-	$(COMPOSE) run --rm pipeline ingest
+# Live data pipeline. Runs on the host (uv) so raw/ and clean/ persist; needs the `db` service.
+# Raw downloads are cached, so re-runs only fetch what is missing. caffeinate keeps macOS awake.
+PIPELINE := $(shell command -v caffeinate >/dev/null && echo "caffeinate -dims") uv run biomed-pipeline
+LOCAL_DB := DATABASE_URL=postgresql://biomed:biomed@localhost:$${DB_PORT:-5432}/biomed
+
+ingest: ## Live ingestion of every public source (network; Copernicus credentials in .env)
+	$(LOCAL_DB) $(PIPELINE) ingest
+
+data: ## ingest → build → load → export-snapshot → report
+	$(LOCAL_DB) $(PIPELINE) all
+
+snapshot: ## Rebuild features from data/clean, load them, refresh data/snapshot and DATA_REPORT
+	$(LOCAL_DB) $(PIPELINE) build
+	$(LOCAL_DB) $(PIPELINE) load
+	$(LOCAL_DB) $(PIPELINE) export-snapshot
+	$(LOCAL_DB) $(PIPELINE) report
+
+load-snapshot: ## Load data/snapshot into the running database (offline)
+	$(COMPOSE) run --rm pipeline load-snapshot

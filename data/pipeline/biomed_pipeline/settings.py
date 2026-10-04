@@ -16,8 +16,17 @@ class Settings(BaseSettings):
     raw_dir: Path = REPO_ROOT / "data" / "raw"
     clean_dir: Path = REPO_ROOT / "data" / "clean"
 
+    # Optional free GBIF account: enables the asynchronous download API (faster, citable DOI).
+    gbif_username: str | None = None
+    gbif_password: str | None = None
+    gbif_email: str | None = None
+
     copernicusmarine_service_username: str | None = None
     copernicusmarine_service_password: str | None = None
+
+    @property
+    def has_gbif_credentials(self) -> bool:
+        return bool(self.gbif_username and self.gbif_password and self.gbif_email)
 
     @property
     def has_copernicus_credentials(self) -> bool:

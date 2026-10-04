@@ -21,3 +21,127 @@ model AppMeta {
 
   @@map("app_meta")
 }
+
+/// Data source registry. Every stored feature value and occurrence points to one record.
+model Provenance {
+  id                 String       @id
+  sourceKey          String       @map("source_key")
+  name               String
+  url                String
+  license            String
+  licenseUrl         String?      @map("license_url")
+  citation           String?
+  spatialResolution  String       @map("spatial_resolution")
+  temporalCoverage   String?      @map("temporal_coverage")
+  temporalResolution String?      @map("temporal_resolution")
+  variables          String[]
+  accessMethod       String?      @map("access_method")
+  /// live | snapshot-fallback | derived
+  mode               String
+  retrievedAt        DateTime     @map("retrieved_at")
+  rawPath            String?      @map("raw_path")
+  checksum           String?
+  recordCount        Int?         @map("record_count")
+  notes              String?
+  cellFeatures       CellFeature[]
+  occurrences        Occurrence[]
+
+  @@map("provenance")
+}
+
+model Territory {
+  code  String @id
+  name  String
+  /// metropole | drom
+  kind  String
+  geom  Unsupported("geometry(MultiPolygon, 4326)")?
+  cells Cell[]
+
+  @@map("territory")
+}
+
+/// H3 cell (resolution 6 or 7) covering land and/or 12 nm territorial sea.
+model Cell {
+  h3            String        @id
+  resolution    Int           @db.SmallInt
+  parentH3      String?       @map("parent_h3")
+  territoryCode String        @map("territory_code")
+  territory     Territory     @relation(fields: [territoryCode], references: [code])
+  lat           Float
+  lon           Float
+  areaKm2       Float         @map("area_km2")
+  landFraction  Float         @map("land_fraction")
+  seaFraction   Float         @map("sea_fraction")
+  geom          Unsupported("geometry(Polygon, 4326)")?
+  features      CellFeature[]
+
+  @@index([resolution, territoryCode])
+  @@index([parentH3])
+  @@map("cell")
+}
+
+/// Feature dictionary: label, unit and meaning of every environmental variable.
+model FeatureDef {
+  key         String        @id
+  label       String
+  unit        String
+  /// marine | terrestrial | pressure | regulatory
+  domain      String
+  description String
+  values      CellFeature[]
+
+  @@map("feature_def")
+}
+
+/// One environmental value per (cell, feature), with its provenance.
+model CellFeature {
+  h3           String
+  featureKey   String     @map("feature_key")
+  value        Float
+  provenanceId String     @map("provenance_id")
+  cell         Cell       @relation(fields: [h3], references: [h3], onDelete: Cascade)
+  feature      FeatureDef @relation(fields: [featureKey], references: [key])
+  provenance   Provenance @relation(fields: [provenanceId], references: [id])
+
+  @@id([h3, featureKey])
+  @@index([featureKey])
+  @@map("cell_feature")
+}
+
+/// Species identity. Descriptive fields (medical uses, tolerances, references) are added later.
+model Species {
+  id             String       @id
+  scientificName String       @unique @map("scientific_name")
+  /// marine | freshwater | terrestrial
+  habitat        String
+  gbifTaxonKey   Int?         @map("gbif_taxon_key")
+  aphiaId        Int?         @map("aphia_id")
+  occurrences    Occurrence[]
+
+  @@map("species")
+}
+
+/// Quality-filtered presence record from GBIF or OBIS (training label for the SDM).
+model Occurrence {
+  id                     BigInt     @id @default(autoincrement())
+  speciesId              String     @map("species_id")
+  species                Species    @relation(fields: [speciesId], references: [id])
+  /// gbif | obis
+  source                 String
+  sourceRecordId         String     @map("source_record_id")
+  lat                    Float
+  lon                    Float
+  year                   Int?       @db.SmallInt
+  basisOfRecord          String?    @map("basis_of_record")
+  coordinateUncertaintyM Float?     @map("coordinate_uncertainty_m")
+  countryCode            String?    @map("country_code")
+  datasetKey             String?    @map("dataset_key")
+  license                String?
+  provenanceId           String     @map("provenance_id")
+  provenance             Provenance @relation(fields: [provenanceId], references: [id])
+  geom                   Unsupported("geometry(Point, 4326)")?
+
+  @@unique([source, sourceRecordId])
+  @@index([speciesId])
+  @@map("occurrence")
+}

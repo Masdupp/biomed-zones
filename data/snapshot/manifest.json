@@ -1,0 +1,63 @@
+{
+  "version": "2026.10.04",
+  "created_at": "2026-10-04T10:46:31+00:00",
+  "rows": {
+    "cells_r7": 150146,
+    "cells_r6": 22030,
+    "occurrences": 278852,
+    "provenance": 17
+  },
+  "provenance_modes": {
+    "cmems-bgc": "live",
+    "cmems-phy": "live",
+    "copernicus-dem-glo90": "live",
+    "corine-land-cover-2018": "live",
+    "derived-12nm-buffer": "derived",
+    "emodnet-bathymetry": "live",
+    "esa-worldcover-2021": "live",
+    "gbif": "live",
+    "gmrt": "live",
+    "marineregions-12nm": "live",
+    "naturalearth-10m": "live",
+    "nga-world-port-index": "live",
+    "obis": "live",
+    "openmeteo-era5land": "live",
+    "patrinat-protected-areas": "live",
+    "soilgrids-2": "live",
+    "terraclimate": "live"
+  },
+  "files": {
+    "features_r6.parquet": {
+      "bytes": 2709685,
+      "sha256": "dba62c2c1126bb5dff1b0e921d6fce9ebec0162d979252138d593cadd51aa31e"
+    },
+    "features_r7.parquet": {
+      "bytes": 13212766,
+      "sha256": "111be4ccc734fc837510e8876382d5dd379584d7e3a052e98fbe98f2310fd28d"
+    },
+    "gbif_taxon_keys.json": {
+      "bytes": 274,
+      "sha256": "c60e1cff04ccd07cba5bac5a5f8347e9b33d44e34088a160cddd3f90ba72d136"
+    },
+    "occurrences.parquet": {
+      "bytes": 5830847,
+      "sha256": "8d758bfed6dea344f0d50f5c1c4db238ff865494e7642a5450669f99426a6d81"
+    },
+    "provenance.json": {
+      "bytes": 18554,
+      "sha256": "4ea1ee9672f0b03410f271763f831d4a99fc0ae079505e137ee1e9e367a62f42"
+    },
+    "provenance_r6.parquet": {
+      "bytes": 119913,
+      "sha256": "20487f02c55f83e6d6d9db53eaa72f116ef67ebca0b2799f024d82b38b65d6ed"
+    },
+    "provenance_r7.parquet": {
+      "bytes": 352424,
+      "sha256": "6ce235b7e53365b8f6dd7ff2001913db604fdec3c2bd0cb41a9bae45ec603542"
+    },
+    "territories.parquet": {
+      "bytes": 1899300,
+      "sha256": "3086646d82e88eb5201930213fbe4d842c131088e2f2a7369b829115198d5711"
+    }
+  }
+}

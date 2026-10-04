@@ -55,3 +55,34 @@ Short ADRs. Status is `accepted` unless stated otherwise. New decisions are appe
 **Context.** The dev machine had no Node and only Python 3.9.
 **Decision.** Node 20 LTS tarball in `~/.local/node20`; Python 3.11 via `uv python install`. Containers are the reference runtime; local tools only speed up lint/test loops. The Makefile prepends `~/.local/node20/bin` to `PATH` when present.
 **Consequences.** No system changes; removable by deleting two directories.
+
+## ADR-0012 — TerraClimate for gridded terrestrial climate; Open-Meteo for frost days only
+**Context.** The spec names Open-Meteo for air temperature, precipitation, humidity and frost days. Open-Meteo counts each two weeks of data per location as one call (free tier: 600/min, 5,000/h, 10,000/day). A 5-year daily climatology costs ~130 calls per point: ~170,000 calls for a 0.25° lattice over France, and far more for the worldwide occurrence points the SDM needs.
+**Decision.** Temperature (mean, coldest-month min, warmest-month max), annual precipitation and relative humidity come from TerraClimate 2021–2025 (CC0, 1/24°, THREDDS NCSS), used for both training (global, 0.25°) and prediction (France, 1/24°). Open-Meteo (ERA5-Land) supplies frost days, which need daily data, for one cold season on a 0.5°/0.25°/0.1° lattice (~455 nodes, ~4,900 weighted calls, throttled).
+**Consequences.** One consistent climate definition for train and predict. Frost days are a single-season indicator, labelled as such.
+
+## ADR-0013 — Copernicus Marine multi-year reanalyses, 2021–2025, streamed month by month
+**Decision.** GLOBAL_MULTIYEAR_PHY_001_030 (1/12°: surface temperature, bottom temperature, surface salinity) and GLOBAL_MULTIYEAR_BGC_001_029 (1/4°: O2, pH, chl-a), monthly, 2021-01 to 2025-12 (the interim extension now covers to 2026). Each global month is loaded via `open_dataset` (ARCO), accumulated into a 12-month climatology and cropped to regional raw subsets. Global climatologies are kept in `data/clean` for SDM training.
+**Consequences.** Same product for training and prediction; coastal cells use the nearest valid ocean pixel within 25 km (physics) / 60 km (BGC).
+
+## ADR-0014 — Overseas substitutes where European products stop
+**Decision.** Bathymetry: EMODnet in Metropole, GMRT in the DROM. Land cover: CLC 2018 everywhere it exists (Metropole + DOM editions); ESA WorldCover 2021 for Guyane's interior, which the CLC DOM edition does not map. Provenance is recorded per value, so each cell says which product it came from.
+
+## ADR-0015 — Protected areas from the PatriNat layers on the IGN Géoplateforme
+**Context.** The INPN WFS (ws.carmencarto.fr) did not answer during development.
+**Decision.** Use the same PatriNat datasets republished at data.geopf.fr (Etalab 2.0): Natura 2000 SIC/ZPS, national park cores, integral reserves, national and Corsican nature reserves, biotope orders, marine natural parks. Natura 2000 only exists in Metropole.
+
+## ADR-0016 — Mayotte 12 nm limit derived; ports from the World Port Index
+**Decision.** Mayotte is absent from Marine Regions' 12 nm layer (sovereignty disputed with the Comoros); its limit is a 22,224 m coastline buffer, provenance `derived`. Ports come from NGA World Port Index (public domain) because Natural Earth lacks the Réunion and Mayotte ports; towns are Natural Earth places with ≥ 20,000 inhabitants.
+
+## ADR-0017 — Features computed at H3 resolution 7, aggregated to 6
+**Decision.** All features are computed once at resolution 7 (~5.2 km²). Raster sources are averaged over pixels whose centre falls in the cell (cell-centroid value if no pixel centre falls inside); coarse grids use the nearest valid node. Resolution 6 values are the NaN-skipping mean of their children; their provenance is the most frequent child provenance.
+**Consequences.** One definition across zoom levels; the snapshot stores both resolutions (~150k + 22k rows).
+
+## ADR-0018 — Per-value provenance stored as a parallel table
+**Decision.** Alongside each wide feature table, a same-shaped table holds the provenance id of every value (dictionary-encoded in Parquet, so it costs almost nothing). PostGIS stores the long form `cell_feature(h3, feature_key, value, provenance_id)`.
+
+## ADR-0019 — Marine zone = territorial sea ∪ internal waters
+**Context.** Marine Regions' 12 nm layer is measured from legal baselines and excludes internal waters (enclosed bays, estuaries, lagoons). A spot check found the Baie du Mont-Saint-Michel — the reference site for the regression test — outside the grid. Internal waters are 16,094 km² in Metropole, 2,792 km² in Guyane, 2,450 km² in Guadeloupe, 412 km² in Martinique.
+**Decision.** The marine zone is the union of `eez_12nm` and `eez_internal_waters` (Marine Regions, CC BY 4.0). This added 4,117 resolution-7 cells (+28 % marine cells).
+**Consequences.** Bays and lagoons, often the most relevant sites for marine culture, are scored.
