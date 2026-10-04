@@ -13,6 +13,18 @@ jobs:
   node:
     name: Node (lint, typecheck, test, build)
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        # API integration tests create (and drop) their own database on this server.
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: biomed
+          POSTGRES_PASSWORD: biomed
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U biomed" --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      TEST_DATABASE_SERVER: postgresql://biomed:biomed@localhost:5432
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

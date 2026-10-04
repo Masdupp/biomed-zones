@@ -17,5 +17,5 @@
     "sourceMap": true,
     "types": ["node", "jest"]
   },
-  "include": ["src", "tests", "prisma"]
+  "include": ["src", "tests", "prisma", "scripts"]
 }

@@ -104,3 +104,20 @@ Short ADRs. Status is `accepted` unless stated otherwise. New decisions are appe
 ## ADR-0023 — Species profiles are built and verified, not typed
 **Decision.** Medical uses, tolerance bands and reference keys are hand-written in `data/reference/species.source.json`; `biomed-pipeline species` adds taxonomy and IUCN status from GBIF (gaps from WoRMS) and resolves every DOI with Crossref and every URL over HTTP. Unresolvable references are marked "to verify". During drafting, 9 of 27 DOIs recalled from memory resolved to unrelated papers and were replaced by Crossref-searched ones.
 **Consequences.** All 34 references in `species.json` are verified; tolerance bands remain literature-derived approximations flagged for expert validation.
+
+## ADR-0024 — Session design: short JWT access cookie + rotated opaque refresh cookie
+**Decision.** Access: JWT (HS256, 15 min, issuer/audience checked) in an httpOnly `bz_access` cookie, also accepted as a Bearer token for API clients. Refresh: an opaque random value with an HMAC, 7 days, httpOnly `bz_refresh`, stored server-side only as a SHA-256 hash. Every refresh rotates the token; presenting an already-rotated token revokes its whole family (RFC 6819 §5.2.2.3 theft detection). Cookies are SameSite=Strict; state-changing requests carrying a non-whitelisted `Origin` are refused (CSRF defence in depth). `Secure` is configurable (`COOKIE_SECURE`) because the demo runs on http://localhost.
+**Consequences.** Stolen access tokens expire quickly; stolen refresh tokens are detected on reuse; logout and account deletion revoke server-side.
+
+## ADR-0025 — Passwords: Argon2id via @node-rs/argon2
+**Decision.** Argon2id with OWASP parameters (m = 19 MiB, t = 2, p = 1), 12–128 character passwords without composition rules (NIST SP 800-63B). `@node-rs/argon2` ships prebuilt binaries (no node-gyp in the image). Login takes comparable time whether or not the email exists.
+
+## ADR-0026 — GDPR: minimal data, export, erasure with scientific traceability
+**Decision.** Personal data = email, display name, password hash, timestamps. `GET /me/export` returns everything held (user, contributions, sessions, own audit entries) as a JSON attachment. `DELETE /me` (password + "DELETE" confirmation) removes the user, sessions, drafts and pending contributions; reviewed contributions are kept but detached (author → null, displayed as "Deleted user"); audit entries keep the action but lose the actor. Public endpoints never expose emails.
+**Consequences.** Erasure is effective for personal data while validated observations stay usable as training data.
+
+## ADR-0027 — Contributions feed training only after validation, never as examples
+**Decision.** Approved, non-example contributions are added to the next training run: presence observations and successful/partial trials as presences, absences and failed trials as background, with predictors taken from the containing cell's stored `ml_*` values (works offline). Seeded example contributions (`is_example`) are excluded from training and visibly labelled.
+
+## ADR-0028 — API tests on a throwaway database per run
+**Decision.** Jest's global setup creates `biomed_test_<timestamp>_<pid>`, applies migrations with `prisma migrate deploy`, seeds it and inserts a fixture grid; the global teardown drops only that database. Destructive commands such as `prisma migrate reset` are never used (Prisma also refuses them when run by an AI agent without explicit user consent). CI provides a PostGIS service container.

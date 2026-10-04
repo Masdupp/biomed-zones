@@ -5,3 +5,4 @@ data/snapshot
 *.md
 data/reference
 docs/model
+docs/API

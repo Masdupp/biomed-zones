@@ -26,6 +26,8 @@ RUN --mount=type=cache,target=/root/.npm npm ci --workspace @biomed/api --includ
 COPY --from=build /repo/node_modules/.prisma /repo/node_modules/.prisma
 COPY --from=build /repo/apps/api/dist apps/api/dist
 COPY apps/api/prisma apps/api/prisma
+# Species profiles read by the seed (dist/seed.js resolves /repo/data/reference/species.json).
+COPY data/reference data/reference
 WORKDIR /repo/apps/api
 USER node
 EXPOSE 3001

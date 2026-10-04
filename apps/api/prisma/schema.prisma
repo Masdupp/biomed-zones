@@ -24,24 +24,24 @@ model AppMeta {
 
 /// Data source registry. Every stored feature value and occurrence points to one record.
 model Provenance {
-  id                 String       @id
-  sourceKey          String       @map("source_key")
+  id                 String        @id
+  sourceKey          String        @map("source_key")
   name               String
   url                String
   license            String
-  licenseUrl         String?      @map("license_url")
+  licenseUrl         String?       @map("license_url")
   citation           String?
-  spatialResolution  String       @map("spatial_resolution")
-  temporalCoverage   String?      @map("temporal_coverage")
-  temporalResolution String?      @map("temporal_resolution")
+  spatialResolution  String        @map("spatial_resolution")
+  temporalCoverage   String?       @map("temporal_coverage")
+  temporalResolution String?       @map("temporal_resolution")
   variables          String[]
-  accessMethod       String?      @map("access_method")
+  accessMethod       String?       @map("access_method")
   /// live | snapshot-fallback | derived
   mode               String
-  retrievedAt        DateTime     @map("retrieved_at")
-  rawPath            String?      @map("raw_path")
+  retrievedAt        DateTime      @map("retrieved_at")
+  rawPath            String?       @map("raw_path")
   checksum           String?
-  recordCount        Int?         @map("record_count")
+  recordCount        Int?          @map("record_count")
   notes              String?
   cellFeatures       CellFeature[]
   occurrences        Occurrence[]
@@ -50,7 +50,7 @@ model Provenance {
 }
 
 model Territory {
-  code  String @id
+  code  String                                       @id
   name  String
   /// metropole | drom
   kind  String
@@ -62,16 +62,16 @@ model Territory {
 
 /// H3 cell (resolution 6 or 7) covering land and/or 12 nm territorial sea.
 model Cell {
-  h3            String        @id
-  resolution    Int           @db.SmallInt
-  parentH3      String?       @map("parent_h3")
-  territoryCode String        @map("territory_code")
-  territory     Territory     @relation(fields: [territoryCode], references: [code])
+  h3            String                                  @id
+  resolution    Int                                     @db.SmallInt
+  parentH3      String?                                 @map("parent_h3")
+  territoryCode String                                  @map("territory_code")
+  territory     Territory                               @relation(fields: [territoryCode], references: [code])
   lat           Float
   lon           Float
-  areaKm2       Float         @map("area_km2")
-  landFraction  Float         @map("land_fraction")
-  seaFraction   Float         @map("sea_fraction")
+  areaKm2       Float                                   @map("area_km2")
+  landFraction  Float                                   @map("land_fraction")
+  seaFraction   Float                                   @map("sea_fraction")
   geom          Unsupported("geometry(Polygon, 4326)")?
   features      CellFeature[]
   scores        Score[]
@@ -111,37 +111,61 @@ model CellFeature {
 
 /// Species identity. Descriptive fields (medical uses, tolerances, references) are added later.
 model Species {
-  id             String          @id
-  scientificName String          @unique @map("scientific_name")
+  id                    String          @id
+  scientificName        String          @unique @map("scientific_name")
   /// marine | freshwater | terrestrial
-  habitat        String
-  gbifTaxonKey   Int?            @map("gbif_taxon_key")
-  aphiaId        Int?            @map("aphia_id")
-  occurrences    Occurrence[]
-  metrics        SpeciesMetric[]
-  scores         Score[]
+  habitat               String
+  gbifTaxonKey          Int?            @map("gbif_taxon_key")
+  aphiaId               Int?            @map("aphia_id")
+  commonNameEn          String?         @map("common_name_en")
+  commonNameFr          String?         @map("common_name_fr")
+  authorship            String?
+  /// {rank: {name, source}} from GBIF Backbone / WoRMS
+  taxonomy              Json?
+  /// {category, code, source}
+  iucn                  Json?
+  /// [{compound, use, clinical_status, references: [key]}]
+  medicalApplications   Json?           @map("medical_applications")
+  /// {parameter: {min, opt_min, opt_max, max, lethal, extreme_min?, extreme_max?}}
+  tolerances            Json?
+  toleranceNote         String?         @map("tolerance_note")
+  toleranceReferences   String[]        @default([]) @map("tolerance_references")
+  cultivationDifficulty String?         @map("cultivation_difficulty")
+  cultivationNote       String?         @map("cultivation_note")
+  nativeTerritories     String[]        @default([]) @map("native_territories")
+  nativeNote            String?         @map("native_note")
+  frostSensitive        Boolean         @default(false) @map("frost_sensitive")
+  /// {key: {doi?, url?, title, authors, year, container, status}}
+  references            Json?
+  /// Wikimedia Commons image with author and licence
+  photo                 Json?
+  profileUpdatedAt      DateTime?       @map("profile_updated_at")
+  occurrences           Occurrence[]
+  metrics               SpeciesMetric[]
+  scores                Score[]
+  contributions         Contribution[]
 
   @@map("species")
 }
 
 /// Quality-filtered presence record from GBIF or OBIS (training label for the SDM).
 model Occurrence {
-  id                     BigInt     @id @default(autoincrement())
-  speciesId              String     @map("species_id")
-  species                Species    @relation(fields: [speciesId], references: [id])
+  id                     BigInt                                @id @default(autoincrement())
+  speciesId              String                                @map("species_id")
+  species                Species                               @relation(fields: [speciesId], references: [id])
   /// gbif | obis
   source                 String
-  sourceRecordId         String     @map("source_record_id")
+  sourceRecordId         String                                @map("source_record_id")
   lat                    Float
   lon                    Float
-  year                   Int?       @db.SmallInt
-  basisOfRecord          String?    @map("basis_of_record")
-  coordinateUncertaintyM Float?     @map("coordinate_uncertainty_m")
-  countryCode            String?    @map("country_code")
-  datasetKey             String?    @map("dataset_key")
+  year                   Int?                                  @db.SmallInt
+  basisOfRecord          String?                               @map("basis_of_record")
+  coordinateUncertaintyM Float?                                @map("coordinate_uncertainty_m")
+  countryCode            String?                               @map("country_code")
+  datasetKey             String?                               @map("dataset_key")
   license                String?
-  provenanceId           String     @map("provenance_id")
-  provenance             Provenance @relation(fields: [provenanceId], references: [id])
+  provenanceId           String                                @map("provenance_id")
+  provenance             Provenance                            @relation(fields: [provenanceId], references: [id])
   geom                   Unsupported("geometry(Point, 4326)")?
 
   @@unique([source, sourceRecordId])
@@ -172,20 +196,20 @@ model ModelRun {
 
 /// Spatial-block cross-validation results for one species in one run.
 model SpeciesMetric {
-  runId       String    @map("run_id")
-  run         ModelRun  @relation(fields: [runId], references: [id], onDelete: Cascade)
-  speciesId   String    @map("species_id")
-  species     Species   @relation(fields: [speciesId], references: [id])
+  runId       String   @map("run_id")
+  run         ModelRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  speciesId   String   @map("species_id")
+  species     Species  @relation(fields: [speciesId], references: [id])
   trained     Boolean
   reason      String?
-  nPresences  Int       @map("n_presences")
-  nBackground Int       @map("n_background")
-  aucMean     Float?    @map("auc_mean")
-  aucStd      Float?    @map("auc_std")
-  tssMean     Float?    @map("tss_mean")
-  tssStd      Float?    @map("tss_std")
-  lrAucMean   Float?    @map("lr_auc_mean")
-  lrTssMean   Float?    @map("lr_tss_mean")
+  nPresences  Int      @map("n_presences")
+  nBackground Int      @map("n_background")
+  aucMean     Float?   @map("auc_mean")
+  aucStd      Float?   @map("auc_std")
+  tssMean     Float?   @map("tss_mean")
+  tssStd      Float?   @map("tss_std")
+  lrAucMean   Float?   @map("lr_auc_mean")
+  lrTssMean   Float?   @map("lr_tss_mean")
   threshold   Float?
   detail      Json
 
@@ -220,4 +244,108 @@ model Score {
   @@id([speciesId, h3])
   @@index([speciesId, resolution, score])
   @@map("score")
+}
+
+enum Role {
+  CONTRIBUTOR
+  ADMIN
+}
+
+/// Minimal personal data (GDPR): email, display name, password hash, role.
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  displayName   String         @map("display_name")
+  passwordHash  String         @map("password_hash")
+  role          Role           @default(CONTRIBUTOR)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  lastLoginAt   DateTime?      @map("last_login_at")
+  contributions Contribution[] @relation("author")
+  reviews       Contribution[] @relation("reviewer")
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]
+
+  @@map("app_user")
+}
+
+/// Refresh tokens are stored hashed (SHA-256) and rotated on every use.
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique @map("token_hash")
+  /// all tokens descending from one login share a family; reuse revokes the family
+  family    String
+  expiresAt DateTime  @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([family])
+  @@map("refresh_token")
+}
+
+enum ContributionType {
+  FIELD_OBSERVATION
+  CULTIVATION_TRIAL
+}
+
+enum ContributionStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+/// A field observation or cultivation trial. Approved ones become training data.
+model Contribution {
+  id            String             @id @default(cuid())
+  authorId      String?            @map("author_id")
+  author        User?              @relation("author", fields: [authorId], references: [id], onDelete: SetNull)
+  speciesId     String             @map("species_id")
+  species       Species            @relation(fields: [speciesId], references: [id])
+  type          ContributionType
+  status        ContributionStatus @default(DRAFT)
+  title         String
+  description   String
+  lat           Float
+  lon           Float
+  /// H3 resolution-7 cell (computed server-side); not a foreign key: cells are reloaded
+  h3            String
+  observedAt    DateTime           @map("observed_at")
+  /// presence | absence for observations; success | partial | failure for trials
+  outcome       String
+  /// {key: {value, unit}} e.g. water temperature, survival rate
+  measurements  Json               @default("{}")
+  /// [{doi?, url?, citation, status: verified|unverified, title?}]
+  references    Json               @default("[]")
+  isExample     Boolean            @default(false) @map("is_example")
+  reviewerId    String?            @map("reviewer_id")
+  reviewer      User?              @relation("reviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  reviewComment String?            @map("review_comment")
+  reviewedAt    DateTime?          @map("reviewed_at")
+  submittedAt   DateTime?          @map("submitted_at")
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([speciesId, status])
+  @@index([authorId])
+  @@map("contribution")
+}
+
+/// Append-only log of administrative and account actions.
+model AuditLog {
+  id         BigInt   @id @default(autoincrement())
+  actorId    String?  @map("actor_id")
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action     String
+  targetType String   @map("target_type")
+  targetId   String?  @map("target_id")
+  detail     Json     @default("{}")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([actorId])
+  @@index([createdAt])
+  @@map("audit_log")
 }

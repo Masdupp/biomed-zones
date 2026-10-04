@@ -83,6 +83,63 @@ def fill_from_worms(name: str, taxonomy: dict) -> None:
             taxonomy[rank] = {"name": found[rank], "source": f"WoRMS (AphiaID {aphia})"}
 
 
+def _strip_html(text: str | None) -> str | None:
+    import re
+
+    return " ".join(re.sub(r"<[^>]+>", " ", text).split()) if text else None
+
+
+def wikimedia_photo(name: str) -> dict | None:
+    """Lead image of the English Wikipedia article, with Commons author and licence."""
+    r = _get(
+        "https://en.wikipedia.org/w/api.php",
+        {
+            "action": "query",
+            "format": "json",
+            "prop": "pageimages",
+            "piprop": "name",
+            "titles": name,
+            "redirects": 1,
+        },
+    )
+    if r is None or r.status_code != 200:
+        return None
+    pages = r.json().get("query", {}).get("pages", {})
+    file = next((p.get("pageimage") for p in pages.values() if p.get("pageimage")), None)
+    if not file:
+        return None
+    r = _get(
+        "https://commons.wikimedia.org/w/api.php",
+        {
+            "action": "query",
+            "format": "json",
+            "prop": "imageinfo",
+            "titles": f"File:{file}",
+            "iiprop": "url|extmetadata",
+            "iiurlwidth": 960,
+        },
+    )
+    if r is None or r.status_code != 200:
+        return None
+    info = next(iter(r.json()["query"]["pages"].values())).get("imageinfo", [{}])[0]
+    meta = info.get("extmetadata", {})
+    value = lambda k: _strip_html(meta.get(k, {}).get("value"))  # noqa: E731
+    license_name = value("LicenseShortName")
+    if not license_name or not any(
+        x in license_name.lower() for x in ("cc", "public domain", "pd", "free use")
+    ):
+        return None  # only openly licensed images
+    return {
+        "file": file,
+        "url": info.get("thumburl") or info.get("url"),
+        "source_page": info.get("descriptionurl"),
+        "author": value("Artist") or "Unknown author",
+        "license": license_name,
+        "license_url": value("LicenseUrl"),
+        "credit": value("Credit"),
+    }
+
+
 def verify_reference(key: str, ref: dict) -> dict:
     out = {"key": key, **ref}
     if "doi" in ref:
@@ -122,6 +179,9 @@ def build() -> dict:
         prof = gbif_profile(s["scientific_name"], kingdom)
         fill_from_worms(s["scientific_name"], prof["taxonomy"])
         prof["taxonomy"] = {r: prof["taxonomy"][r] for r in RANKS if r in prof["taxonomy"]}
+        prof["photo"] = wikimedia_photo(s["scientific_name"]) or wikimedia_photo(
+            s["common_name_en"]
+        )
         used = {k for m in s["medical_applications"] for k in m["references"]}
         used |= set(s.get("tolerance_references", []))
         unknown = used - refs.keys()

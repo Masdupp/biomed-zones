@@ -297,14 +297,20 @@ def _gbif_via_download_api() -> str | None:
     """Fetch all species in one GBIF download when credentials exist. Returns the DOI."""
     from . import gbif_download
 
-    if not get_settings().has_gbif_credentials:
-        return None
+    meta_file = _raw() / "gbif_download.json"
     if all((_raw() / f"gbif_{sp.id}.jsonl.gz").exists() for sp in SPECIES):
+        # Cached raw files: reuse the DOI of the download that produced them, if any.
+        return json.loads(meta_file.read_text()).get("doi") if meta_file.exists() else None
+    if not get_settings().has_gbif_credentials:
         return None
     keys = {sp.id: gbif_taxon_key(sp) for sp in SPECIES}
     pred = gbif_download.predicate(list(keys.values()), BASIS, MIN_YEAR, MAX_UNCERTAINTY_M)
     zip_path, meta = gbif_download.request_and_fetch(pred)
     gbif_download.split_by_species(zip_path, keys)
+    meta_file.write_text(
+        json.dumps({k: meta.get(k) for k in ("key", "doi", "created", "totalRecords")}, indent=2)
+        + "\n"
+    )
     return meta.get("doi")
 
 

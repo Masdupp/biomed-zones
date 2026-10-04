@@ -182,7 +182,7 @@
   {
     "id": "gbif",
     "source_key": "gbif",
-    "name": "GBIF occurrence search API",
+    "name": "GBIF occurrence download",
     "url": "https://www.gbif.org/",
     "license": "Per record: CC0 1.0, CC BY 4.0 or CC BY-NC 4.0 (stored with each record)",
     "spatial_resolution": "point (coordinate uncertainty <= 10 km)",

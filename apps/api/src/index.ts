@@ -1,7 +1,13 @@
 import { createApp } from './app';
-import { config } from './config';
+import { config, DEFAULT_SECRETS } from './config';
 import { logger } from './lib/logger';
 import { prisma } from './lib/db';
+
+if (DEFAULT_SECRETS) {
+  logger.warn(
+    'Using default JWT secrets: acceptable for the local demo only. Set JWT_*_SECRET in production.',
+  );
+}
 
 const server = createApp().listen(config.API_PORT, () => {
   logger.info({ port: config.API_PORT }, 'api listening');

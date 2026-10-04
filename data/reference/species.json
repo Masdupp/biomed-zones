@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04T11:41:41+00:00",
+  "generated_at": "2026-10-04T12:11:24+00:00",
   "parameter_semantics": {
     "fit": "Triangular/trapezoid fit on the annual-mean feature: 100 inside [opt_min, opt_max], linear to 0 at min and max, 0 outside.",
     "hard_constraints": "Survival limits checked on extreme values (coldest/warmest month, lowest salinity or oxygen month, frost days). Any violation caps the expert score."
@@ -99,6 +99,15 @@
         "category": "NOT_EVALUATED",
         "code": "NE",
         "source": "IUCN Red List via GBIF (species/{key}/iucnRedListCategory)"
+      },
+      "photo": {
+        "file": "Arenicola_marina_2010.JPG",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Arenicola_marina_2010.JPG/960px-Arenicola_marina_2010.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Arenicola_marina_2010.JPG",
+        "author": "4028mdk09",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "credit": "Own work"
       }
     },
     {
@@ -199,6 +208,15 @@
         "category": "LEAST_CONCERN",
         "code": "LC",
         "source": "IUCN Red List via GBIF (species/{key}/iucnRedListCategory)"
+      },
+      "photo": {
+        "file": "Conus_magus_001.jpg",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Conus_magus_001.jpg/960px-Conus_magus_001.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Conus_magus_001.jpg",
+        "author": "Richard Parker",
+        "license": "CC BY 2.0",
+        "license_url": "https://creativecommons.org/licenses/by/2.0",
+        "credit": "Conus magus 56mm Uploaded by JoJan"
       }
     },
     {
@@ -297,6 +315,15 @@
         "category": "VULNERABLE",
         "code": "VU",
         "source": "IUCN Red List via GBIF (species/{key}/iucnRedListCategory)"
+      },
+      "photo": {
+        "file": "Limulus_polyphemus_(aq.).jpg",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Limulus_polyphemus_%28aq.%29.jpg/960px-Limulus_polyphemus_%28aq.%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Limulus_polyphemus_(aq.).jpg",
+        "author": "Hans Hillewaert",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "credit": "Own work"
       }
     },
     {
@@ -395,6 +422,15 @@
         "category": "LEAST_CONCERN",
         "code": "LC",
         "source": "IUCN Red List via GBIF (species/{key}/iucnRedListCategory)"
+      },
+      "photo": {
+        "file": "Holothuria_tubulosa_Banyuls.jpg",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Holothuria_tubulosa_Banyuls.jpg/960px-Holothuria_tubulosa_Banyuls.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Holothuria_tubulosa_Banyuls.jpg",
+        "author": "Renaud Coupa",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "credit": "The uploader on Wikimedia Commons received this from the author/copyright holder."
       }
     },
     {
@@ -465,6 +501,15 @@
         "category": "LEAST_CONCERN",
         "code": "LC",
         "source": "IUCN Red List via GBIF (species/{key}/iucnRedListCategory)"
+      },
+      "photo": {
+        "file": "Zebrafisch.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/ac/Zebrafisch.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Zebrafisch.jpg",
+        "author": "Azul",
+        "license": "Copyrighted free use",
+        "license_url": null,
+        "credit": "Own work"
       }
     },
     {
@@ -534,6 +579,15 @@
         "category": "CRITICALLY_ENDANGERED",
         "code": "CR",
         "source": "IUCN Red List via GBIF (species/{key}/iucnRedListCategory)"
+      },
+      "photo": {
+        "file": "Axolotl_ganz.jpg",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Axolotl_ganz.jpg/960px-Axolotl_ganz.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Axolotl_ganz.jpg",
+        "author": "LoKiLeCh",
+        "license": "CC BY-SA 3.0",
+        "license_url": "http://creativecommons.org/licenses/by-sa/3.0/",
+        "credit": "Own work"
       }
     },
     {
@@ -633,6 +687,15 @@
         "category": "NOT_EVALUATED",
         "code": "NE",
         "source": "IUCN Red List via GBIF (species/{key}/iucnRedListCategory)"
+      },
+      "photo": {
+        "file": "Vinca_(Catharanthus_roseus)_cultivada_em_Bagé,_RS,_Brasil_-_55231652268.jpg",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Vinca_%28Catharanthus_roseus%29_cultivada_em_Bag%C3%A9%2C_RS%2C_Brasil_-_55231652268.jpg/960px-Vinca_%28Catharanthus_roseus%29_cultivada_em_Bag%C3%A9%2C_RS%2C_Brasil_-_55231652268.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Vinca_(Catharanthus_roseus)_cultivada_em_Bag%C3%A9,_RS,_Brasil_-_55231652268.jpg",
+        "author": "O Tupinólogo",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0",
+        "credit": "https://www.flickr.com/photos/157896962@N04/55231652268/"
       }
     },
     {
@@ -733,6 +796,15 @@
         "category": "LEAST_CONCERN",
         "code": "LC",
         "source": "IUCN Red List via GBIF (species/{key}/iucnRedListCategory)"
+      },
+      "photo": {
+        "file": "Salix_alba_leaves.jpg",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Salix_alba_leaves.jpg/960px-Salix_alba_leaves.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "source_page": "https://commons.wikimedia.org/wiki/File:Salix_alba_leaves.jpg",
+        "author": "MPF",
+        "license": "CC BY-SA 3.0",
+        "license_url": "http://creativecommons.org/licenses/by-sa/3.0/",
+        "credit": "Own work"
       }
     },
     {
@@ -831,6 +903,15 @@
         "category": "ENDANGERED",
         "code": "EN",
         "source": "IUCN Red List via GBIF (species/{key}/iucnRedListCategory)"
+      },
+      "photo": {
+        "file": "GINKGOBAUM-2.jpg",
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/GINKGOBAUM-2.jpg/960px-GINKGOBAUM-2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "source_page": "https://commons.wikimedia.org/wiki/File:GINKGOBAUM-2.jpg",
+        "author": "EecherplazGinkgo06.jpg : Cayambe derivative work: Ginkgotree ( talk )",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "credit": "https://www.ginkgo-ratgeber.info/baum-pflanzen-schneiden-und-pflegen.html"
       }
     }
   ],

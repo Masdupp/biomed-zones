@@ -43,6 +43,6 @@ describe('health endpoints', () => {
   it('returns JSON 404 for unknown routes', async () => {
     const res = await request(app).get('/nope');
     expect(res.status).toBe(404);
-    expect(res.body).toEqual({ error: 'not_found' });
+    expect(res.body).toEqual({ error: 'not_found', message: 'Route not found' });
   });
 });

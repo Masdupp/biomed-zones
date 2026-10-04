@@ -30,7 +30,8 @@ services:
     image: biomed-zones/api:dev
     environment:
       <<: *db-env
-    command: ['npx', 'prisma', 'migrate', 'deploy']
+    # Apply migrations, then seed species profiles, demo accounts and example contributions.
+    command: ['sh', '-c', 'npx prisma migrate deploy && node dist/seed.js']
     depends_on:
       db:
         condition: service_healthy

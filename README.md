@@ -4,7 +4,7 @@
 
 BioMed Zones scores every H3 hexagon of Metropolitan France (land and 12 nm territorial sea) and the five overseas regions (Guadeloupe, Martinique, Guyane, Réunion, Mayotte) for 9 medical species. The score combines a transparent expert model with a species distribution model trained on GBIF/OBIS occurrences, and every value can be traced back to a public source.
 
-> Status: **Phase 3 (model) complete.** See [PLAN.md](PLAN.md) for phases and [docs/DECISIONS.md](docs/DECISIONS.md) for architecture decisions.
+> Status: **Phase 4 (API) complete.** See [PLAN.md](PLAN.md) for phases and [docs/DECISIONS.md](docs/DECISIONS.md) for architecture decisions.
 
 ## Quick start
 
@@ -104,7 +104,25 @@ Local dev servers (with the stack's `db` running): `npm run dev -w @biomed/api`,
 
 ## Demo accounts
 
-Created by the seed in Phase 4.
+Seeded automatically by the `migrate` job (local demo only — change or remove them in any shared deployment):
+
+| Role | Email | Password |
+|---|---|---|
+| Administrator | `admin@biomed-zones.local` | `BioMedAdmin!2026` |
+| Contributor | `contributor@biomed-zones.local` | `BioMedContrib!2026` |
+
+The seed also creates 20 example contributions, titled "[Example] …" and flagged `isExample`; they are
+never used for model training.
+
+## API
+
+Express 5 + Prisma, documented at **http://localhost:8080/api/docs** (Swagger UI); endpoint list and auth
+model in [docs/API.md](docs/API.md), OpenAPI document in [docs/API/openapi.json](docs/API/openapi.json).
+Highlights: `/species`, `/cells` (compact H3 rows or GeoJSON, filters, pagination, cache), `/cells/{h3}`
+(every value with its provenance), `/compare`, `/contributions` (draft → pending → approved/rejected,
+references checked against Crossref), `/admin/validate`, `/admin/retrain`, `/sources`,
+`/reports/{h3}/{species}` (PDF), `/me/export` and `DELETE /me` (GDPR). Cookies are httpOnly and
+SameSite=Strict; passwords are hashed with Argon2id.
 
 ## Licence and data
 

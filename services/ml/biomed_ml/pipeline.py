@@ -7,6 +7,7 @@ are written to model_run so POST /train can be polled.
 
 from __future__ import annotations
 
+import hashlib
 import logging
 import math
 import time
@@ -35,7 +36,76 @@ def new_run_id() -> str:
 def training_table() -> pd.DataFrame:
     s = get_ml_settings()
     path = s.training_data if s.training_data.exists() else s.snapshot_training_data
-    return pd.read_parquet(path)
+    base = pd.read_parquet(path)
+    extra = contribution_rows(base)
+    if len(extra):
+        log.info("adding %d rows from approved contributions", len(extra))
+        base = pd.concat([base, extra], ignore_index=True)
+    return base
+
+
+PRESENCE_OUTCOMES = ("presence", "success", "partial")
+ABSENCE_OUTCOMES = ("absence", "failure")
+
+
+def contribution_rows(base: pd.DataFrame) -> pd.DataFrame:
+    """Approved, non-example contributions as extra training rows.
+
+    Presence observations and successful / partial trials become presences; absences and
+    failed trials become background points. Their predictors are the `ml_*` features of the
+    containing resolution-7 cell (the same global-layer values as for prediction), so this works
+    offline. Example contributions (seed data) are never used.
+    """
+    from biomed_pipeline.db import connect
+    from biomed_pipeline.sdm_data import BLOCK_DEG, N_FOLDS
+
+    try:
+        with connect() as conn:
+            rows = conn.execute(
+                "SELECT c.species_id, c.lat, c.lon, c.h3, c.outcome FROM contribution c "
+                "WHERE c.status = 'APPROVED' AND NOT c.is_example"
+            ).fetchall()
+            if not rows:
+                return pd.DataFrame()
+            cur = conn.execute(
+                "SELECT h3, feature_key, value FROM cell_feature WHERE h3 = ANY(%s) "
+                "AND feature_key LIKE 'ml\\_%%'",
+                ([r[3] for r in rows],),
+            )
+            feats = pd.DataFrame(cur.fetchall(), columns=["h3", "feature_key", "value"])
+    except Exception:  # noqa: BLE001 — table absent (fresh DB) or DB down: train without them
+        log.warning("could not read contributions", exc_info=True)
+        return pd.DataFrame()
+    wide = feats.pivot(index="h3", columns="feature_key", values="value") if len(feats) else None
+    out = []
+    for species_id, lat, lon, h3_id, outcome in rows:
+        if wide is None or h3_id not in wide.index:
+            continue
+        label = 1 if outcome in PRESENCE_OUTCOMES else 0 if outcome in ABSENCE_OUTCOMES else None
+        if label is None:
+            continue
+        block = f"{int(np.floor(lat / BLOCK_DEG))}_{int(np.floor(lon / BLOCK_DEG))}"
+        known = base[(base.species_id == species_id) & (base.block == block)]["fold"]
+        # stable across processes (built-in hash() is salted per process)
+        fold = (
+            int(known.iloc[0])
+            if len(known)
+            else int(hashlib.md5(block.encode()).hexdigest(), 16) % N_FOLDS
+        )
+        out.append(
+            {
+                "species_id": species_id,
+                "lat": lat,
+                "lon": lon,
+                "pixel": h3_id,
+                "kind": "contribution",
+                "label": label,
+                "block": block,
+                "fold": fold,
+                **wide.loc[h3_id].to_dict(),
+            }
+        )
+    return pd.DataFrame(out)
 
 
 def metric_row(
