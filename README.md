@@ -19,7 +19,7 @@ BioMed Zones scores every H3 hexagon of Metropolitan France (land and 12 nm terr
 
 ## Live demo
 
-A read-only version runs on GitHub Pages: **https://OWNER.github.io/biomed-zones/**. It includes the map at resolution 6, cell explanations, compare, species, model and sources, all built from the real responses of the full stack. Sign-in, contributions, admin, PDF reports and resolution 7 need the full application (see Quick start). Rebuild it with `make static-export static` (ADR-0036).
+A read-only version runs on GitHub Pages: **https://masdupp.github.io/biomed-zones/**. It includes the map at resolution 6, cell explanations, compare, species, model and sources, all built from the real responses of the full stack. Sign-in, contributions, admin, PDF reports and resolution 7 need the full application (see Quick start). Rebuild it with `make static-export static` (ADR-0036).
 
 ## Quick start
 
