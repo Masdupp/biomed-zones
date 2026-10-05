@@ -9,6 +9,7 @@ import { CATEGORY_LABEL, categoryTone } from '@/lib/color';
 import { date, one, two, value as fmt } from '@/lib/format';
 import { useCell, useExplain, useSpeciesList } from '@/lib/queries';
 import type { Category, FeatureValue } from '@/lib/types';
+import { STATIC } from '@/lib/static';
 
 const DOMAIN_LABEL: Record<string, string> = {
   marine: 'Marine environment',
@@ -341,7 +342,7 @@ export function CellPanel({
           )}
           {inCompare ? 'In comparison' : 'Add to comparison'}
         </Button>
-        {stored && (
+        {stored && !STATIC && (
           <a
             href={`/api/reports/${h3}/${species}`}
             className="inline-flex h-7 items-center gap-1.5 rounded-md border border-border-strong px-2.5 text-xs font-medium text-ink hover:bg-surface-hover"

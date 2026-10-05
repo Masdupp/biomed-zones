@@ -81,6 +81,8 @@ services:
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-dev-access-secret-change-me}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-me}
       ML_ADMIN_TOKEN: ${ML_ADMIN_TOKEN:-dev-ml-admin-token-change-me}
+      # Set to false only for local bulk jobs such as scripts/export-static.mjs.
+      RATE_LIMIT_ENABLED: ${RATE_LIMIT_ENABLED:-true}
     ports:
       - '${API_PORT:-3001}:3001'
     depends_on:

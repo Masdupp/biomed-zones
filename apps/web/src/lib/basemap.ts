@@ -1,4 +1,5 @@
 import type { StyleSpecification } from 'maplibre-gl';
+import { asset } from './static';
 
 /** Offline basemap style from local GeoJSON (no tile server, no glyphs). */
 export function basemapStyle(
@@ -8,15 +9,16 @@ export function basemapStyle(
   const c = dark
     ? { sea: '#0e141a', land: '#161d24', border: '#2f3b47', outline: '#2bb3a6' }
     : { sea: '#e8edef', land: '#f7f7f5', border: '#cfcac4', outline: '#0f766e' };
-  const land = extent === 'world' ? '/basemap/world.geojson' : '/basemap/land.geojson';
+  const land =
+    extent === 'world' ? asset('/basemap/world.geojson') : asset('/basemap/land.geojson');
   return {
     version: 8,
     sources: {
       land: { type: 'geojson', data: land },
       ...(extent === 'regional'
         ? {
-            borders: { type: 'geojson', data: '/basemap/borders.geojson' },
-            territories: { type: 'geojson', data: '/basemap/territories.geojson' },
+            borders: { type: 'geojson', data: asset('/basemap/borders.geojson') },
+            territories: { type: 'geojson', data: asset('/basemap/territories.geojson') },
           }
         : {}),
     },

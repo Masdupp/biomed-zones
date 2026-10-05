@@ -1,6 +1,6 @@
 import type { Photo } from '@/lib/types';
-import {} from '@/components/ui';
 import { cx } from '@/lib/cx';
+import { asset } from '@/lib/static';
 
 /**
  * Wikimedia Commons photo with visible author / licence credit, or a neutral placeholder.
@@ -34,9 +34,7 @@ export function SpeciesPhoto({
     );
   }
   const src = photo.local_path
-    ? size === 'thumb'
-      ? photo.local_path.replace(/\.jpg$/, '-thumb.jpg')
-      : photo.local_path
+    ? asset(size === 'thumb' ? photo.local_path.replace(/\.jpg$/, '-thumb.jpg') : photo.local_path)
     : photo.url;
   return (
     <figure className={cx('relative overflow-hidden bg-bg-subtle', className)}>

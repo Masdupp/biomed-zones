@@ -8,7 +8,7 @@ COMPOSE := docker compose
 WEB_URL := http://localhost:8080
 
 .DEFAULT_GOAL := help
-.PHONY: help install images up demo down reset logs ps health lint typecheck test build ci e2e lighthouse report ingest data snapshot load-snapshot
+.PHONY: help install images up demo down reset logs ps health lint typecheck test build ci e2e lighthouse report static-export static ingest data snapshot load-snapshot
 
 help: ## List targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -84,6 +84,17 @@ report: ## Run every suite and write docs/TEST_REPORT.md (keeps going past failu
 	-$(MAKE) --no-print-directory e2e
 	@test -f reports/lighthouse/summary.json || echo "No Lighthouse summary: run 'make lighthouse' to include it."
 	node scripts/test-report.mjs
+
+# Read-only static demo for GitHub Pages (ADR-0036). static-export needs the running stack.
+REPO_URL ?= $(shell git remote get-url origin 2>/dev/null | sed -e 's#git@github.com:#https://github.com/#' -e 's#\.git$$##')
+
+static-export: ## Export resolution-6 responses of the running stack → apps/web/static-data
+	RATE_LIMIT_ENABLED=false $(COMPOSE) up -d api
+	@sleep 5
+	$(KEEP_AWAKE) node scripts/export-static.mjs $(WEB_URL); status=$$?; $(COMPOSE) up -d api; exit $$status
+
+static: ## Build the static demo → apps/web/dist-static (base /biomed-zones/)
+	node scripts/build-static.mjs --repo "$(REPO_URL)"
 
 # Live data pipeline. Runs on the host (uv) so raw/ and clean/ persist; needs the `db` service.
 # Raw downloads are cached, so re-runs only fetch what is missing. caffeinate keeps macOS awake.

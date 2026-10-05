@@ -11,6 +11,7 @@ import { HARD_CAP, expertScore } from '@/lib/expert';
 import { one, two } from '@/lib/format';
 import { useCell, useMetrics, useSpecies, useSpeciesList } from '@/lib/queries';
 import type { SpeciesDetail } from '@/lib/types';
+import { asset } from '@/lib/static';
 
 const EXAMPLE_CELL = '87186068affffff'; // intertidal flats, Baie du Mont-Saint-Michel
 
@@ -400,7 +401,7 @@ export function Model() {
           Model card
         </h2>
         <div className="rounded-md border border-border bg-surface p-4">
-          <Markdown src="/docs/MODEL_CARD.md" />
+          <Markdown src={asset('/docs/MODEL_CARD.md')} />
         </div>
       </section>
     </div>

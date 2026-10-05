@@ -6,6 +6,7 @@ import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
 import { PRIMARY_NAV } from './nav';
 import { useAuth } from '@/lib/auth';
+import { REPO_URL, STATIC } from '@/lib/static';
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   [
@@ -17,7 +18,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const secondary = [
-    { to: '/contribute', label: 'Contribute' },
+    ...(STATIC ? [] : [{ to: '/contribute', label: 'Contribute' }]),
     ...(user?.role === 'ADMIN' ? [{ to: '/admin', label: 'Admin' }] : []),
   ];
   const account = user
@@ -52,12 +53,23 @@ export function Header() {
             ))}
           </nav>
           <ThemeToggle />
-          <Link
-            to={account.to}
-            className="ml-1 hidden h-8 max-w-[12rem] items-center truncate rounded-md border border-border-strong px-3 text-sm text-ink transition-colors transition-base hover:bg-surface-hover md:inline-flex"
-          >
-            {account.label}
-          </Link>
+          {STATIC ? (
+            REPO_URL && (
+              <a
+                href={REPO_URL}
+                className="ml-1 hidden h-8 items-center rounded-md border border-border-strong px-3 text-sm text-ink transition-colors transition-base hover:bg-surface-hover md:inline-flex"
+              >
+                Source on GitHub
+              </a>
+            )
+          ) : (
+            <Link
+              to={account.to}
+              className="ml-1 hidden h-8 max-w-[12rem] items-center truncate rounded-md border border-border-strong px-3 text-sm text-ink transition-colors transition-base hover:bg-surface-hover md:inline-flex"
+            >
+              {account.label}
+            </Link>
+          )}
           <button
             type="button"
             className="inline-flex h-8 w-8 items-center justify-center rounded-md text-ink-muted hover:bg-surface-hover md:hidden"
@@ -83,7 +95,7 @@ export function Header() {
             className="overflow-hidden border-t border-border md:hidden"
           >
             <ul className="flex flex-col px-2 py-2">
-              {[...PRIMARY_NAV, ...secondary, account].map((item) => (
+              {[...PRIMARY_NAV, ...secondary, ...(STATIC ? [] : [account])].map((item) => (
                 <li key={item.to}>
                   <NavLink to={item.to} className={linkClass} onClick={() => setOpen(false)}>
                     <span className="block px-2 py-2">{item.label}</span>

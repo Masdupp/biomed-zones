@@ -8,3 +8,5 @@ docs/model
 docs/API
 apps/web/public/basemap
 apps/web/public/docs
+apps/web/dist-static
+apps/web/static-data

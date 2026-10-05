@@ -9,7 +9,11 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 60_000, refetchOnWindowFocus: false, retry: 1 } },
 });
 
-const router = createBrowserRouter(routes, { future: ROUTER_FUTURE });
+// The static demo is served from a sub-path on GitHub Pages (/biomed-zones/).
+const router = createBrowserRouter(routes, {
+  future: ROUTER_FUTURE,
+  basename: import.meta.env.BASE_URL.replace(/\/$/, '') || '/',
+});
 
 export function App() {
   return (

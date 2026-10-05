@@ -1,3 +1,5 @@
+import { STATIC, staticRequest } from './static';
+
 /** Fetch wrapper for the same-origin gateway (/api, /ml). Refreshes the session once on 401. */
 export class ApiError extends Error {
   constructor(
@@ -33,6 +35,14 @@ async function refreshSession(): Promise<boolean> {
 }
 
 export async function request<T>(path: string, opts: Options = {}): Promise<T> {
+  if (STATIC) {
+    try {
+      return (await staticRequest(path, opts.method)) as T;
+    } catch (e) {
+      const err = e as Error & { status?: number; code?: string };
+      throw new ApiError(err.status ?? 503, err.code ?? 'static_demo', err.message);
+    }
+  }
   const res = await fetch(path, {
     method: opts.method ?? 'GET',
     credentials: 'include',
@@ -61,6 +71,7 @@ export async function request<T>(path: string, opts: Options = {}): Promise<T> {
 
 /** Back-compat helper used by the status bar. Accepts 503 bodies (degraded health). */
 export async function getJson<T>(path: string, init?: RequestInit): Promise<T> {
+  if (STATIC) return (await staticRequest(path)) as T;
   const res = await fetch(path, {
     credentials: 'include',
     ...init,

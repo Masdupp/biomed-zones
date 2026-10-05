@@ -6,6 +6,7 @@ import { VIRIDIS_GRADIENT } from '@/lib/color';
 import { date, int } from '@/lib/format';
 import { useCoverage, useSources } from '@/lib/queries';
 import type { CellRow } from '@/lib/types';
+import { asset } from '@/lib/static';
 
 const MapView = lazy(() =>
   import('@/components/map/MapView').then((m) => ({ default: m.MapView })),
@@ -168,7 +169,7 @@ export function Sources() {
               aria-label="Data quality report"
               tabIndex={0}
             >
-              <Markdown src="/docs/DATA_REPORT.md" />
+              <Markdown src={asset('/docs/DATA_REPORT.md')} />
             </div>
           </details>
         </div>

@@ -10,6 +10,7 @@ import { cx } from '@/lib/cx';
 import { CATEGORY_LABEL } from '@/lib/color';
 import { useCells, useSpeciesList } from '@/lib/queries';
 import { TERRITORY_VIEWS } from '@/lib/territories';
+import { STATIC } from '@/lib/static';
 
 // MapLibre + deck.gl (~600 KB) load in parallel with the page shell. The map mounts only after
 // the shell has painted: creating the WebGL context blocks the main thread (ADR-0035).
@@ -56,7 +57,8 @@ export function MapPage() {
   } | null>(null);
   const list = useSpeciesList();
 
-  const fine = (view?.zoom ?? 0) >= FINE_ZOOM;
+  // The static demo ships resolution 6 only.
+  const fine = !STATIC && (view?.zoom ?? 0) >= FINE_ZOOM;
   const bbox = fine && view ? paddedBbox(view.bbox) : undefined;
   const coarse = useCells({ species, resolution: 6, excludeProtected });
   const detail = useCells(fine ? { species, resolution: 7, bbox, excludeProtected } : null);

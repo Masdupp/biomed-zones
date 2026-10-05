@@ -6,6 +6,8 @@ import { fileURLToPath, URL } from 'node:url';
 
 // Dev proxy mirrors the nginx gateway routes (ADR-0010).
 export default defineConfig({
+  // Sub-path of the static demo on GitHub Pages (scripts/build-static.mjs); '/' otherwise.
+  base: process.env.VITE_BASE ?? '/',
   plugins: [react(), tailwindcss()],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   server: {
