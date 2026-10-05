@@ -1,6 +1,6 @@
 # BioMed Zones v2 — Test report
 
-Generated 2026-10-05 10:49 UTC by `scripts/test-report.mjs` from the JUnit output of each suite (`make report`). Commit `0e85a0e`, Node v20.20.2, Python 3.11.15.
+Generated 2026-10-05 10:49 UTC by `scripts/test-report.mjs` from the JUnit output of each suite (`make report`). Commit `6264653`, Node v20.20.2, Python 3.11.15.
 
 ## Summary
 
