@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Copy, FileDown, Plus, X } from 'lucide-react';
 import { Badge, Button, ErrorNote, Skeleton } from '@/components/ui';
@@ -47,6 +47,11 @@ export function CellPanel({
   }, [cell.data]);
 
   const stored = cell.data?.scores.find((s) => s.species === species) ?? null;
+
+  // Performance budget hook (e2e/perf.spec.ts): cell profile rendered after a click.
+  useEffect(() => {
+    if (cell.data) performance.mark(`bz:panel-ready:${h3}`);
+  }, [cell.data, h3]);
   const ex = explain.data?.score;
   const score = ex?.score ?? stored?.score ?? null;
   const category = (ex?.category ?? stored?.category) as Category | undefined;
@@ -61,6 +66,7 @@ export function CellPanel({
   return (
     <aside
       aria-label="Cell details"
+      data-testid="cell-panel"
       className="flex h-full flex-col overflow-hidden border-l border-border bg-surface"
     >
       <header className="flex items-start justify-between gap-2 border-b border-border px-4 py-3">
@@ -69,10 +75,8 @@ export function CellPanel({
           <h2 className="num truncate text-sm text-ink">{h3}</h2>
           {cell.data && (
             <p className="num text-xs text-ink-subtle">
-              {cell.data.centroid.lat.toFixed(4)}°, {cell.data.centroid.lon.toFixed(4)}° · res{' '}
-              {cell.data.resolution} · {one(cell.data.areaKm2)} km² · land{' '}
-              {Math.round(cell.data.landFraction * 100)} % / sea{' '}
-              {Math.round(cell.data.seaFraction * 100)} %
+              {/* Non-breaking spaces keep each value with its unit when the line wraps. */}
+              {`${cell.data.centroid.lat.toFixed(4)}°, ${cell.data.centroid.lon.toFixed(4)}° · res\u00a0${cell.data.resolution} · ${one(cell.data.areaKm2)}\u00a0km² · land\u00a0${Math.round(cell.data.landFraction * 100)}\u00a0% / sea\u00a0${Math.round(cell.data.seaFraction * 100)}\u00a0%`}
             </p>
           )}
         </div>
@@ -270,7 +274,7 @@ export function CellPanel({
                       >
                         <Link
                           to={`/sources#${f.provenance.id}`}
-                          className="hover:text-ink hover:underline"
+                          className="underline decoration-border-strong underline-offset-2 hover:text-ink"
                         >
                           {f.provenance.name}
                         </Link>{' '}

@@ -22,6 +22,8 @@ export default tseslint.config(
         { allowConstantExport: true, allowExportNames: ['useAuth'] },
       ],
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      // Scrollable regions are made keyboard-focusable (WCAG 2.1.1, axe scrollable-region-focusable).
+      'jsx-a11y/no-noninteractive-tabindex': ['error', { tags: [], roles: ['tabpanel', 'region'] }],
     },
   },
   {

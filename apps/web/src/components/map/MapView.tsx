@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import maplibregl, { type LngLatBoundsLike } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { MapboxOverlay } from '@deck.gl/mapbox';
@@ -8,6 +8,7 @@ import { basemapStyle } from '@/lib/basemap';
 import { CATEGORY_LABEL, cellColor } from '@/lib/color';
 import { useDark } from '@/lib/useDark';
 import type { CellRow } from '@/lib/types';
+import { trackContainerSize } from '@/lib/mapResize';
 
 export interface ViewState {
   zoom: number;
@@ -93,7 +94,9 @@ export function MapView({
     m.on('moveend', emit);
     map.current = m;
     overlay.current = o;
+    const untrack = trackContainerSize(m, container.current);
     return () => {
+      untrack();
       m.remove();
       map.current = null;
       overlay.current = null;
@@ -115,6 +118,9 @@ export function MapView({
     });
   }, [focus]);
 
+  const marked = useRef(false);
+  const [animate, setAnimate] = useState(false);
+
   const layers = useMemo(() => {
     const base = new H3HexagonLayer<CellRow>({
       id: 'cells',
@@ -124,10 +130,14 @@ export function MapView({
       extruded: false,
       stroked: false,
       pickable: interactive,
-      highPrecision: 'auto',
+      // Instanced hexagons (one template per viewport). 'auto' switches to per-cell polygons because
+      // France spans several icosahedron faces, which would tessellate every cell on the main thread.
+      highPrecision: false,
       autoHighlight: interactive,
       highlightColor: [255, 255, 255, 70],
-      transitions: reducedMotion() ? undefined : { getFillColor: 200 },
+      // Animate colour changes (species, filters) but not the first load: starting a transition
+      // reads the attribute buffer back from the GPU synchronously (~100 ms of blocking time).
+      transitions: animate && !reducedMotion() ? { getFillColor: 200 } : undefined,
     });
     const sel = selected
       ? new H3HexagonLayer<string>({
@@ -142,11 +152,19 @@ export function MapView({
         })
       : null;
     return sel ? [base, sel] : [base];
-  }, [cells, selected, interactive, dark]);
+  }, [cells, selected, interactive, dark, animate]);
 
   useEffect(() => {
     overlay.current?.setProps({
       layers,
+      // Performance budget hook (e2e/quality.spec.ts): first frame drawn with data.
+      onAfterRender: () => {
+        if (!marked.current && cells.length > 0) {
+          marked.current = true;
+          performance.mark('bz:map-ready');
+          setAnimate(true);
+        }
+      },
       onClick: (info: PickingInfo<CellRow>) => {
         if (info.object) handlers.current.onSelect?.(info.object[0]);
       },
@@ -172,7 +190,7 @@ export function MapView({
         : undefined,
       getCursor: ({ isHovering }: { isHovering: boolean }) => (isHovering ? 'pointer' : 'grab'),
     });
-  }, [layers, interactive, formatTooltip]);
+  }, [layers, interactive, formatTooltip, cells.length]);
 
   // MapLibre forces `position: relative` on its container, so positioning classes go on a wrapper.
   return (

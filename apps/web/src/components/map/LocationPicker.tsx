@@ -3,6 +3,7 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { basemapStyle } from '@/lib/basemap';
 import { useDark } from '@/lib/useDark';
+import { trackContainerSize } from '@/lib/mapResize';
 
 /** Click-to-pick location map; the parent also offers lat/lon inputs for keyboard users. */
 export default function LocationPicker({
@@ -39,7 +40,11 @@ export default function LocationPicker({
       pick.current(Number(e.lngLat.lat.toFixed(5)), Number(e.lngLat.lng.toFixed(5))),
     );
     map.current = m;
-    return () => m.remove();
+    const untrack = trackContainerSize(m, el.current);
+    return () => {
+      untrack();
+      m.remove();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -57,7 +62,7 @@ export default function LocationPicker({
   return (
     <div
       ref={el}
-      className="h-72 w-full rounded-md border border-border"
+      className="h-96 w-full rounded-md border border-border"
       role="application"
       aria-label="Location picker map: click to set the observation location"
     />

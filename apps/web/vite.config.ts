@@ -26,5 +26,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     css: false,
+    // JUnit output feeds docs/TEST_REPORT.md (scripts/test-report.mjs).
+    reporters: ['default', 'junit'],
+    outputFile: { junit: '../../reports/junit/web.xml' },
   },
 });

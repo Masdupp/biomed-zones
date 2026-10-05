@@ -347,7 +347,7 @@ export function Contribute() {
 
             {step === 1 && (
               <div className="grid gap-3">
-                <Suspense fallback={<Skeleton className="h-72 w-full" />}>
+                <Suspense fallback={<Skeleton className="h-96 w-full" />}>
                   <LocationPicker
                     lat={form.lat}
                     lon={form.lon}

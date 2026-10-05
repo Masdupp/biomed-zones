@@ -1,15 +1,36 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { cellToLatLng } from 'h3-js';
 import { Loader2 } from 'lucide-react';
 import { CellPanel } from '@/components/cell/CellPanel';
 import { Legend } from '@/components/map/Legend';
-import { MapView, type ViewState } from '@/components/map/MapView';
+import type { ViewState } from '@/components/map/MapView';
 import { Select } from '@/components/ui';
 import { cx } from '@/lib/cx';
 import { CATEGORY_LABEL } from '@/lib/color';
 import { useCells, useSpeciesList } from '@/lib/queries';
 import { TERRITORY_VIEWS } from '@/lib/territories';
+
+// MapLibre + deck.gl (~600 KB) load in parallel with the page shell. The map mounts only after
+// the shell has painted: creating the WebGL context blocks the main thread (ADR-0035).
+const loadMapView = () => import('@/components/map/MapView');
+const MapView = lazy(() => loadMapView().then((m) => ({ default: m.MapView })));
+
+function useAfterFirstPaint(): boolean {
+  const [painted, setPainted] = useState(false);
+  useEffect(() => {
+    void loadMapView();
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => setPainted(true));
+    });
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+    };
+  }, []);
+  return painted;
+}
 
 const FINE_ZOOM = 7.5;
 const round = (v: number, d = 1) => Math.round(v * 10 ** d) / 10 ** d;
@@ -28,6 +49,7 @@ export function MapPage() {
   const minScore = Number(params.get('min') ?? 0);
   const excludeProtected = params.get('protected') === 'exclude';
   const [view, setView] = useState<ViewState | null>(null);
+  const showMap = useAfterFirstPaint();
   const [focus, setFocus] = useState<{
     bounds: [[number, number], [number, number]];
     key: string;
@@ -145,15 +167,24 @@ export function MapPage() {
 
       <div className="relative flex min-h-0 flex-1">
         <div className="relative min-w-0 flex-1">
-          <MapView
-            className="absolute inset-0"
-            cells={cells}
-            selected={selected}
-            onSelect={(h3) => update({ cell: h3 })}
-            onView={setView}
-            focus={focus}
-            ariaLabel={`Suitability map for ${current?.scientificName ?? species}. Use the list of best cells for keyboard access.`}
-          />
+          <Suspense fallback={<div className="absolute inset-0 bg-bg-subtle" aria-hidden="true" />}>
+            {showMap ? (
+              <MapView
+                className="absolute inset-0"
+                cells={cells}
+                selected={selected}
+                onSelect={(h3) => {
+                  performance.mark(`bz:cell-click:${h3}`);
+                  update({ cell: h3 });
+                }}
+                onView={setView}
+                focus={focus}
+                ariaLabel={`Suitability map for ${current?.scientificName ?? species}. Use the list of best cells for keyboard access.`}
+              />
+            ) : (
+              <div className="absolute inset-0 bg-bg-subtle" aria-hidden="true" />
+            )}
+          </Suspense>
           <div className="pointer-events-none absolute bottom-8 left-3 flex flex-col gap-2">
             <div className="pointer-events-auto">
               <Legend />
@@ -169,7 +200,10 @@ export function MapPage() {
                 <li key={r[0]}>
                   <button
                     type="button"
-                    onClick={() => update({ cell: r[0] })}
+                    onClick={() => {
+                      performance.mark(`bz:cell-click:${r[0]}`);
+                      update({ cell: r[0] });
+                    }}
                     className={cx(
                       'flex w-full items-center justify-between px-3 py-1.5 text-left hover:bg-surface-hover',
                       r[0] === selected && 'bg-bg-subtle',

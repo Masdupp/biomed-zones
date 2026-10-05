@@ -10,4 +10,19 @@ module.exports = {
   globalSetup: '<rootDir>/tests/helpers/global-setup.ts',
   globalTeardown: '<rootDir>/tests/helpers/global-teardown.ts',
   testTimeout: 30000,
+  // JUnit output feeds docs/TEST_REPORT.md (scripts/test-report.mjs).
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        outputDirectory: '../../reports/junit',
+        outputName: 'api.xml',
+        classNameTemplate: '{filepath}',
+        titleTemplate: '{title}',
+        ancestorSeparator: ' › ',
+        suiteNameTemplate: '{filepath}',
+      },
+    ],
+  ],
 };

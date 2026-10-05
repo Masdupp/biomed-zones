@@ -78,10 +78,15 @@ export function Sources() {
         }
       />
       {q.isError && <ErrorNote error={q.error} />}
-      <div className="mt-4 overflow-x-auto">
+      <div
+        className="mt-4 overflow-x-auto"
+        role="region"
+        aria-label="Provenance table"
+        tabIndex={0}
+      >
         <table className="w-full min-w-[980px] text-sm">
           <thead>
-            <tr className="border-b border-border text-left text-xs text-ink-subtle">
+            <tr className="border-b border-border text-left text-xs whitespace-nowrap text-ink-subtle">
               <th className="py-2 pr-3 font-normal">Source</th>
               <th className="py-2 pr-3 font-normal">Licence</th>
               <th className="py-2 pr-3 font-normal">Resolution</th>
@@ -92,6 +97,15 @@ export function Sources() {
             </tr>
           </thead>
           <tbody>
+            {/* Placeholder rows keep the page height stable while sources load (no layout shift). */}
+            {q.isLoading &&
+              Array.from({ length: 6 }, (_, i) => (
+                <tr key={i} className="border-b border-border">
+                  <td colSpan={7} className="py-2">
+                    <Skeleton className="h-40 w-full" />
+                  </td>
+                </tr>
+              ))}
             {items.map((s) => (
               <tr
                 key={s.id}
@@ -148,7 +162,12 @@ export function Sources() {
             <summary className="cursor-pointer text-sm text-ink">
               docs/DATA_REPORT.md (generated from the database)
             </summary>
-            <div className="mt-3 max-h-[640px] overflow-y-auto">
+            <div
+              className="mt-3 max-h-[640px] overflow-y-auto"
+              role="region"
+              aria-label="Data quality report"
+              tabIndex={0}
+            >
               <Markdown src="/docs/DATA_REPORT.md" />
             </div>
           </details>

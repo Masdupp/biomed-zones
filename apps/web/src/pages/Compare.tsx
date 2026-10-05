@@ -59,7 +59,7 @@ export function Compare() {
         <div className="mt-6">
           <EmptyState title={cells.length ? 'Add at least one more cell' : 'No cells selected'}>
             Open the{' '}
-            <Link to="/map" className="text-brand hover:underline">
+            <Link to="/map" className="text-brand underline underline-offset-2">
               map
             </Link>
             , click a cell and choose “Add to comparison” (up to four).
@@ -95,7 +95,7 @@ export function Compare() {
               ))}
             </ul>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" role="region" aria-label="Comparison table" tabIndex={0}>
             <table className="w-full min-w-[560px] text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs text-ink-subtle">

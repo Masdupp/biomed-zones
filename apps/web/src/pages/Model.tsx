@@ -66,7 +66,7 @@ function WorkedExample() {
           flats of the Baie du Mont-Saint-Michel, cell{' '}
           <Link
             to={`/map?species=arenicola-marina&cell=${EXAMPLE_CELL}`}
-            className="num text-brand hover:underline"
+            className="num text-brand underline underline-offset-2"
           >
             {EXAMPLE_CELL}
           </Link>
@@ -281,7 +281,12 @@ export function Model() {
           Spatial block cross-validation (5° blocks, 5 folds). TSS uses a threshold chosen on the
           training folds only. Run <span className="num">{metrics.data?.run?.id ?? '—'}</span>.
         </p>
-        <div className="mt-3 overflow-x-auto">
+        <div
+          className="mt-3 overflow-x-auto"
+          role="region"
+          aria-label="Validation metrics table"
+          tabIndex={0}
+        >
           <table className="w-full min-w-[680px] text-sm">
             <thead>
               <tr className="border-b border-border text-left text-xs text-ink-subtle">

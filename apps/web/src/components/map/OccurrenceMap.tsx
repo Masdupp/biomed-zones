@@ -3,6 +3,7 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { basemapStyle } from '@/lib/basemap';
 import { useDark } from '@/lib/useDark';
+import { trackContainerSize } from '@/lib/mapResize';
 
 /** World map of occurrence points (GeoJSON, thinned server-side). */
 export default function OccurrenceMap({
@@ -54,7 +55,11 @@ export default function OccurrenceMap({
     );
     m.on('style.load', () => addLayers(m));
     map.current = m;
-    return () => m.remove();
+    const untrack = trackContainerSize(m, el.current);
+    return () => {
+      untrack();
+      m.remove();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -74,7 +79,7 @@ export default function OccurrenceMap({
     <div
       ref={el}
       className="h-72 w-full rounded-md border border-border"
-      role="img"
+      role="region"
       aria-label={label}
     />
   );

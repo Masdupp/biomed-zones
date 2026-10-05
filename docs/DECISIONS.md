@@ -143,3 +143,16 @@ Short ADRs. Status is `accepted` unless stated otherwise. New decisions are appe
 
 ## ADR-0034 — Content-Security-Policy for the SPA
 **Decision.** nginx sends `script-src 'self'` (the theme bootstrap moved from an inline script to `/theme-init.js`), `worker-src 'self' blob:` (MapLibre workers), `img-src 'self' data: blob:` plus the two Wikimedia hosts, `style-src 'self' 'unsafe-inline'` (MapLibre and Framer Motion set inline styles), `font-src 'self' data:` (Vite inlines small font subsets), `connect-src 'self'`, `frame-ancestors 'none'`. All pages were checked for CSP violations in the production build.
+
+## ADR-0035 — Performance measurement and map rendering choices
+**Context.** Phase 6 budgets: map interactive < 2 s, cell click → panel < 300 ms, Lighthouse ≥ 90. Headless Chrome renders WebGL with SwiftShader (on the CPU), which turns MapLibre's context creation and deck.gl's shader linking into hundreds of milliseconds of main-thread time that a real GPU does not pay; Lighthouse scores of the map page also vary by ±5 points between identical runs.
+**Decision.**
+- The budgets are measured in the app with `performance.mark` (`bz:map-ready` on the first deck.gl frame with cells, `bz:cell-click` → `bz:panel-ready`) and asserted by Playwright; values are written to the JUnit report and `docs/TEST_REPORT.md`.
+- Lighthouse runs per page in a fresh process (it occasionally stalls after a WebGL page; retried), desktop preset, **median of 5 runs** (`make lighthouse`), headed Chrome on the GPU (`LH_GPU=1`) for the reported figures; every run's score is kept in the summary. Headless SwiftShader runs remain available and are lower for the map pages.
+- The map page paints its shell first: MapLibre/deck.gl are fetched immediately but `MapView` mounts after two animation frames. Mounting it in the same frame delayed the first paint until the WebGL context existed (observed FCP 672 ms → 68 ms; Lighthouse median 83 → 96).
+- Colour transitions start only after the first frame with data: starting a deck.gl attribute transition reads the buffer back from the GPU synchronously.
+- All maps observe their container (`ResizeObserver` → `map.resize()`); MapLibre alone only follows window resizes.
+- `H3HexagonLayer` uses `highPrecision: false` (instanced hexagons). `'auto'` falls back to per-cell polygons because France spans several icosahedron faces; checked visually at national and local zoom (resolution 6 and 7): no gaps, at most hairline anti-aliasing seams.
+- deck.gl stays in a separate canvas (`interleaved: false`): interleaving into MapLibre's context needed MSAA to avoid seams, which made software-rendered frames slower without a measurable Lighthouse gain.
+- GitHub-hosted runners have no GPU: CI multiplies the E2E budgets by `BUDGET_FACTOR=2`; local runs use the real budgets.
+**Consequences.** Reported performance reflects a desktop with a GPU, as targeted by the spec; the CI figure is a regression guard, not the headline number.

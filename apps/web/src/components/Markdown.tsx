@@ -18,7 +18,14 @@ export function Markdown({ src }: { src: string }) {
         const out = marked.parse(text.replace(/\]\((?!https?:|#|\/)([^)]+)\)/g, `](${base}$1)`), {
           async: false,
         }) as string;
-        if (alive) setHtml(out);
+        // Wide tables scroll horizontally: wrap them in focusable, labelled regions (WCAG 2.1.1).
+        const accessible = out
+          .replace(
+            /<table>/g,
+            '<div class="table-scroll" role="region" aria-label="Table" tabindex="0"><table>',
+          )
+          .replace(/<\/table>/g, '</table></div>');
+        if (alive) setHtml(accessible);
       })
       .catch(() => alive && setError(true));
     return () => {

@@ -21,7 +21,7 @@ export function SpeciesList() {
         description="Nine species with documented medical uses. Profiles combine GBIF taxonomy, IUCN status, Crossref-verified references and literature-derived tolerance bands."
       />
       {q.isError && <ErrorNote error={q.error} />}
-      <div className="mt-4 overflow-x-auto">
+      <div className="mt-4 overflow-x-auto" role="region" aria-label="Species table" tabIndex={0}>
         <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr className="border-b border-border text-left text-xs text-ink-subtle">

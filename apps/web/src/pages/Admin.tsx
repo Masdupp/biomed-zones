@@ -313,7 +313,7 @@ function ModelTab() {
           </div>
         )}
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" role="region" aria-label="Model runs" tabIndex={0}>
         <h2 className="mb-2 text-sm font-medium text-ink">Runs</h2>
         <table className="w-full min-w-[560px] text-sm">
           <thead>
@@ -363,7 +363,7 @@ function AuditTab() {
   if (q.isPending) return <Skeleton className="h-60 w-full" />;
   if (q.isError) return <ErrorNote error={q.error} />;
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto" role="region" aria-label="Audit log" tabIndex={0}>
       <table className="w-full min-w-[640px] text-sm">
         <thead>
           <tr className="border-b border-border text-left text-xs text-ink-subtle">

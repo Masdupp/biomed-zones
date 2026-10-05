@@ -179,6 +179,8 @@
 }
 .prose-bz a {
   color: var(--brand);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 .prose-bz img {
   max-width: 100%;
@@ -186,13 +188,14 @@
   border-radius: var(--radius-md);
   margin: 0.75rem 0;
 }
-.prose-bz table {
-  display: block;
+.prose-bz .table-scroll {
   overflow-x: auto;
+  max-width: 100%;
+  margin: 0.75rem 0;
+}
+.prose-bz table {
   border-collapse: collapse;
   font-size: var(--text-xs);
-  margin: 0.75rem 0;
-  max-width: 100%;
 }
 .prose-bz th,
 .prose-bz td {

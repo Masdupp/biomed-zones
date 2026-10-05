@@ -94,6 +94,12 @@ export function RangeChart({
   );
 }
 
+/** Two lines for long axis labels ("Dissolved oxygen" → "Dissolved" / "oxygen"). */
+function labelLines(label: string): string[] {
+  const i = label.indexOf(' ');
+  return label.length > 10 && i > 0 ? [label.slice(0, i), label.slice(i + 1)] : [label];
+}
+
 /** Radar of parameter fits (0–100) for up to four series. */
 export function RadarChart({
   axes,
@@ -136,12 +142,16 @@ export function RadarChart({
             <text
               x={lx}
               y={ly}
-              textAnchor="middle"
+              textAnchor={lx < c - 1 ? 'end' : lx > c + 1 ? 'start' : 'middle'}
               dominantBaseline="middle"
               fontSize={10}
               fill="var(--ink-muted)"
             >
-              {a}
+              {labelLines(a).map((line, j, all) => (
+                <tspan key={j} x={lx} dy={j === 0 ? `${-(all.length - 1) * 0.6}em` : '1.2em'}>
+                  {line}
+                </tspan>
+              ))}
             </text>
           </g>
         );

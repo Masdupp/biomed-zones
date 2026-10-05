@@ -4,7 +4,18 @@
 
 BioMed Zones scores every H3 hexagon of Metropolitan France (land and 12 nm territorial sea) and the five overseas regions (Guadeloupe, Martinique, Guyane, Réunion, Mayotte) for 9 medical species. The score combines a transparent expert model with a species distribution model trained on GBIF/OBIS occurrences, and every value can be traced back to a public source.
 
-> Status: **Phase 5 (frontend) complete.** See [PLAN.md](PLAN.md) for phases and [docs/DECISIONS.md](docs/DECISIONS.md) for architecture decisions.
+> Status: **v2.0 — all phases (0–6) complete.** See [PLAN.md](PLAN.md) for the phases,
+> [docs/DECISIONS.md](docs/DECISIONS.md) for architecture decisions,
+> [docs/TEST_REPORT.md](docs/TEST_REPORT.md) for test results and
+> [docs/DEMO.md](docs/DEMO.md) for a 2-minute demo script.
+
+| Suitability map | Cell explanation |
+|---|---|
+| ![Suitability map of Salix alba over Metropolitan France](docs/screenshots/map.png) | ![Cell panel for Arenicola marina in the Bay of Mont-Saint-Michel](docs/screenshots/cell.png) |
+| **Compare cells** | **Model card and metrics** |
+| ![Comparison of three cells: radar chart and table](docs/screenshots/compare.png) | ![Model page with spatial cross-validation metrics](docs/screenshots/model.png) |
+| **Contribute (5 steps)** | **Admin validation** |
+| ![Contribution form, location step](docs/screenshots/contribute.png) | ![Admin review: contribution next to the model prediction](docs/screenshots/admin.png) |
 
 ## Quick start
 
@@ -48,7 +59,7 @@ Startup order: `db` → `migrate` (Prisma) → `pipeline` (snapshot load) → `m
 
 ## Data
 
-`docker compose up` loads the committed snapshot (`data/snapshot`, 24 MB): 150,146 H3 cells at
+`docker compose up` loads the committed snapshot (`data/snapshot`, 45 MB): 150,146 H3 cells at
 resolution 7 and 22,030 at resolution 6 over Metropolitan France and the five DROM (land, 12 nm
 territorial sea and internal waters), 38 environmental features per cell with per-value
 provenance, and 278,852 quality-filtered species occurrences. See
@@ -99,6 +110,32 @@ make typecheck   # strict TypeScript
 make test        # Jest, Vitest, pytest
 make ci          # all of the above + builds
 ```
+
+## Testing
+
+| Layer | Tool | Where |
+|---|---|---|
+| Web components and logic | Vitest + React Testing Library | `apps/web/src/**/*.test.ts(x)` |
+| API unit and integration | Jest + Supertest on a throwaway PostGIS database | `apps/api/tests` |
+| Pipeline and ML | pytest | `data/pipeline/tests`, `services/ml/tests` |
+| End-to-end | Playwright + axe-core | `e2e/` |
+
+The five E2E journeys are: map → cell detail, compare, contribute, admin validation, and PDF export. The E2E suite also checks:
+
+- performance budgets: map interactive < 2 s, cell click → panel < 300 ms;
+- WCAG 2.1 AA with axe on every public page;
+- that no page requests a third-party host (offline operation).
+
+The worked example *Arenicola marina* × Baie du Mont-Saint-Michel is a regression test in both Python and TypeScript.
+
+```bash
+make demo        # the E2E suite and Lighthouse run against the stack on :8080
+make e2e         # Playwright (HTML report in playwright-report/)
+make lighthouse  # Lighthouse on 8 pages, median of 5 runs (LH_GPU=1 → headed Chrome on the GPU)
+make report      # runs every suite and writes docs/TEST_REPORT.md from the JUnit files
+```
+
+CI (`.github/workflows/ci.yml`) runs lint, typecheck, unit tests and builds. It then builds the Compose stack and runs the Playwright suite against it, uploading JUnit and HTML reports as artifacts.
 
 Local dev servers (with the stack's `db` running): `npm run dev -w @biomed/api`, `npm run dev -w @biomed/web` (Vite proxies `/api` and `/ml` like the gateway), `uv run uvicorn biomed_ml.main:app --port 8001`.
 

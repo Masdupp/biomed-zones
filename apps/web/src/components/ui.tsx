@@ -1,4 +1,6 @@
 import {
+  cloneElement,
+  isValidElement,
   forwardRef,
   useEffect,
   useId,
@@ -63,12 +65,22 @@ export function Field({
   id: string;
   children: ReactNode;
 }) {
+  // Tie the message to the control so screen readers announce it (WCAG 3.3.1, 1.3.1).
+  const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
+  const control = isValidElement<{ 'aria-invalid'?: boolean; 'aria-describedby'?: string }>(
+    children,
+  )
+    ? cloneElement(children, {
+        'aria-invalid': error ? true : undefined,
+        'aria-describedby': describedBy,
+      })
+    : children;
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-xs font-medium text-ink">
         {label}
       </label>
-      {children}
+      {control}
       {error ? (
         <p id={`${id}-error`} className="text-xs text-danger" role="alert">
           {error}
