@@ -86,7 +86,7 @@ report: ## Run every suite and write docs/TEST_REPORT.md (keeps going past failu
 	node scripts/test-report.mjs
 
 # Read-only static demo for GitHub Pages (ADR-0036). static-export needs the running stack.
-REPO_URL ?= $(shell git remote get-url origin 2>/dev/null | sed -e 's#git@github.com:#https://github.com/#' -e 's#\.git$$##')
+REPO_URL ?= $(shell git remote get-url origin 2>/dev/null | sed -e 's|git@github.com:|https://github.com/|' -e 's|\.git$$||')
 
 static-export: ## Export resolution-6 responses of the running stack → apps/web/static-data
 	RATE_LIMIT_ENABLED=false $(COMPOSE) up -d api
