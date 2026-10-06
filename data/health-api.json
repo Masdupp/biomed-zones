@@ -1,0 +1,1 @@
+{"status":"ok","service":"api","version":"2.0.0","uptimeSeconds":15,"checks":{"database":{"status":"ok","postgis":"3.6.4","h3":"4.2.3"},"ml":{"status":"ok"}}}
