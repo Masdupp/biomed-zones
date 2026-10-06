@@ -11,6 +11,7 @@ import { CATEGORY_LABEL } from '@/lib/color';
 import { useCells, useSpeciesList } from '@/lib/queries';
 import { TERRITORY_VIEWS } from '@/lib/territories';
 import { STATIC } from '@/lib/static';
+import { hasWebGL } from '@/lib/webgl';
 
 // MapLibre + deck.gl (~600 KB) load in parallel with the page shell. The map mounts only after
 // the shell has painted: creating the WebGL context blocks the main thread (ADR-0035).
@@ -87,9 +88,11 @@ export function MapPage() {
     [setParams],
   );
 
+  const noMap = !hasWebGL();
   const topInView = useMemo(() => {
-    if (!view) return [];
-    const [w, s, e, n] = view.bbox;
+    // Without WebGL there is no viewport: list the best cells overall instead.
+    if (!view && !noMap) return [];
+    const [w, s, e, n] = view?.bbox ?? [-180, -90, 180, 90];
     return cells
       .filter((r) => r[2] !== 'excluded')
       .filter((r) => {
@@ -98,7 +101,7 @@ export function MapPage() {
       })
       .sort((a, b) => b[1] - a[1])
       .slice(0, 8);
-  }, [cells, view]);
+  }, [cells, view, noMap]);
 
   const current = list.data?.items.find((s) => s.id === species);
   useEffect(() => {
@@ -192,8 +195,13 @@ export function MapPage() {
               <Legend />
             </div>
           </div>
-          <details className="absolute top-3 left-3 w-64 rounded-md border border-border bg-surface/95 text-xs">
-            <summary className="cursor-pointer px-3 py-2 text-ink">Best cells in view</summary>
+          <details
+            className="absolute top-3 left-3 w-64 rounded-md border border-border bg-surface/95 text-xs"
+            open={noMap || undefined}
+          >
+            <summary className="cursor-pointer px-3 py-2 text-ink">
+              {noMap ? 'Best cells' : 'Best cells in view'}
+            </summary>
             <ol className="max-h-72 overflow-y-auto border-t border-border">
               {topInView.length === 0 && (
                 <li className="px-3 py-2 text-ink-subtle">No scored cell in view.</li>

@@ -4,9 +4,10 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { basemapStyle } from '@/lib/basemap';
 import { useDark } from '@/lib/useDark';
 import { trackContainerSize } from '@/lib/mapResize';
+import { WebGLGuard } from './WebGLGuard';
 
 /** World map of occurrence points (GeoJSON, thinned server-side). */
-export default function OccurrenceMap({
+function OccurrenceMapGL({
   data,
   label,
 }: {
@@ -82,5 +83,16 @@ export default function OccurrenceMap({
       role="region"
       aria-label={label}
     />
+  );
+}
+
+export default function OccurrenceMap(props: {
+  data: GeoJSON.FeatureCollection | undefined;
+  label: string;
+}) {
+  return (
+    <WebGLGuard className="h-72 w-full rounded-md border border-border">
+      <OccurrenceMapGL {...props} />
+    </WebGLGuard>
   );
 }

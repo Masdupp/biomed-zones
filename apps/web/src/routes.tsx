@@ -6,6 +6,7 @@ import { RequireAuth } from './lib/auth';
 import { Home } from './pages/Home';
 import { NotFound } from './pages/NotFound';
 import { SpeciesList } from './pages/Species';
+import { RouteError } from './pages/RouteError';
 
 // Heavy pages (MapLibre / deck.gl) are split out of the initial bundle.
 const MapPage = lazy(() => import('./pages/MapPage'));
@@ -36,6 +37,7 @@ const page = (node: ReactNode) => (
 export const routes: RouteObject[] = [
   {
     element: <AppShell />,
+    errorElement: <RouteError />,
     children: [
       { index: true, element: <Home /> },
       { path: 'map', element: page(<MapPage />) },

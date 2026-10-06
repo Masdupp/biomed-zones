@@ -9,6 +9,7 @@ import { CATEGORY_LABEL, cellColor } from '@/lib/color';
 import { useDark } from '@/lib/useDark';
 import type { CellRow } from '@/lib/types';
 import { trackContainerSize } from '@/lib/mapResize';
+import { WebGLGuard } from './WebGLGuard';
 
 export interface ViewState {
   zoom: number;
@@ -33,7 +34,7 @@ interface Props {
 const reducedMotion = () =>
   window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
-export function MapView({
+function MapViewGL({
   cells,
   selected,
   onSelect,
@@ -203,5 +204,14 @@ export function MapView({
         aria-roledescription="map"
       />
     </div>
+  );
+}
+
+/** Suitability map; falls back to an explanation when the browser has no WebGL. */
+export function MapView(props: Props) {
+  return (
+    <WebGLGuard className={props.className} compact={props.interactive === false}>
+      <MapViewGL {...props} />
+    </WebGLGuard>
   );
 }

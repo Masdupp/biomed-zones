@@ -4,9 +4,10 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { basemapStyle } from '@/lib/basemap';
 import { useDark } from '@/lib/useDark';
 import { trackContainerSize } from '@/lib/mapResize';
+import { WebGLGuard } from './WebGLGuard';
 
 /** Click-to-pick location map; the parent also offers lat/lon inputs for keyboard users. */
-export default function LocationPicker({
+function LocationPickerGL({
   lat,
   lon,
   onPick,
@@ -66,5 +67,17 @@ export default function LocationPicker({
       role="application"
       aria-label="Location picker map: click to set the observation location"
     />
+  );
+}
+
+export default function LocationPicker(props: {
+  lat: number | null;
+  lon: number | null;
+  onPick: (lat: number, lon: number) => void;
+}) {
+  return (
+    <WebGLGuard className="h-96 w-full rounded-md border border-border">
+      <LocationPickerGL {...props} />
+    </WebGLGuard>
   );
 }
